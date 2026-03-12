@@ -234,6 +234,15 @@
 %   of color specifications can be used.
 % \end{description}
 %
+% \paragraph{Text option.}
+% 
+% \begin{description}
+% \item[\xoption{text}:] Text of the outline entry.
+% \end{description}
+% The text is usually provided by a sectioning command.
+% It can be overridden by using \cs{bookmarksetupnext} with the
+% \xoption{text} option before the sectioning command.
+% 
 % \subsubsection{Action options}
 %
 % \begin{description}
@@ -412,12 +421,8 @@
 %   \xoption{rawaction},
 %   \xoption{uri},
 %   \xoption{view},
-% \end{quote}
-% Additionally the following key is available:
-% \begin{quote}
 %   \xoption{text}
 % \end{quote}
-% It returns the text of the outline entry.
 %
 % \paragraph{Option setting.}
 % Inside the hook an option can be set using \cs{bookmarksetup}.
@@ -1487,6 +1492,14 @@
 \def\BKM@StyleStack{}
 %    \end{macrocode}
 %    \end{macro}
+%
+% \subsubsection{Option \xoption{text}}
+%
+%    \begin{macrocode}
+\define@key{BKM}{text}{%
+  \def\bookmark@text{#1}%
+}
+%    \end{macrocode}
 %
 % \subsubsection{Options for source file location}
 %
