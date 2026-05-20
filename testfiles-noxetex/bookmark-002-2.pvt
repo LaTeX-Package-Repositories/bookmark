@@ -1,0 +1,37 @@
+\ExplSyntaxOn
+\debug_on:n { check-declarations , deprecation }
+\ExplSyntaxOff
+
+\DocumentMetadata{}
+\input{regression-test}
+\documentclass{article}
+\usepackage{hyperref}
+\begin{document}
+\START
+Page 1
+
+\section{Grüße}
+\subsection{blub $a=\int$ \texorpdfstring{tex}{pdf 🦆}}
+
+\subsubsection{subsub}
+
+
+\bookmarksetup{openlevel=2}
+\section{Grüße}
+\subsection{blub $a=\int$ \texorpdfstring{tex}{pdf 🦆}}
+
+\subsubsection{subsub}
+
+\bookmarksetup{open=false}
+\section{Grüße}
+\subsection{blub $a=\int$ \texorpdfstring{tex}{pdf 🦆}}
+\subsubsection{subsub}
+
+\bookmarksetup{depth=1}
+
+\AssignSocketPlug{hyp/outline/title}{pdfstringdef}
+\section{blub $a=\int$ \texorpdfstring{tex}{pdf 🦆}}
+
+
+
+\end{document} 
