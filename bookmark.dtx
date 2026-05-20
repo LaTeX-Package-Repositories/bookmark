@@ -6,7 +6,7 @@
 %
 % Copyright (C)
 %    2007-2011 Heiko Oberdiek
-%    2016-2023 Oberdiek Package Support Group
+%    2016-2026 Oberdiek Package Support Group
 %    https://github.com/ho-tex/bookmark/issues
 %
 % This work may be distributed and/or modified under the
@@ -744,7 +744,7 @@
 % 
 % \paragraph{Packages.}
 %
-% Don't load packages loaded by xpackage{hyperref}
+% Don't load packages loaded by \xpackage{hyperref}
 %    \begin{macrocode}
 \RequirePackage{hyperref}[2010/06/18]
 %    \end{macrocode}
@@ -752,36 +752,35 @@
 % \subsubsection{Package options}
 %
 %    \begin{macrocode}
-\SetupKeyvalOptions{family=BKM,prefix=BKM@}
-\DeclareLocalOptions{%
-  atend,%
-  bold,%
-  color,%
-  depth,%
-  dest,%
-  draft,%
-  final,%
-  gotor,%
-  italic,%
-  keeplevel,%
-  level,%
-  named,%
-  numbered,%
-  open,%
-  openlevel,%
-  page,%
-  rawaction,%
-  rellevel,%
-  srcfile,%
-  srcline,%
-  startatroot,%
-  uri,%
-  view,%
-}
+%\DeclareLocalOptions{%
+%  atend,%
+%  bold,%
+%  color,%
+%  depth,%
+%  dest,%
+%  draft,%
+%  final,%
+%  gotor,%
+%  italic,%
+%  keeplevel,%
+%  level,%
+%  named,%
+%  numbered,%
+%  open,%
+%  openlevel,%
+%  page,%
+%  rawaction,%
+%  rellevel,%
+%  srcfile,%
+%  srcline,%
+%  startatroot,%
+%  uri,%
+%  view,%
+%}
 %    \end{macrocode}
 %    \begin{macro}{\bookmarksetup}
 %    \begin{macrocode}
-\newcommand*{\bookmarksetup}{\kvsetkeys{BKM}}
+\newcommand*{\bookmarksetup}{\SetKeys[BKM]}
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macro}{\BKM@setup}
@@ -827,21 +826,20 @@
 %    \end{macro}
 %
 %    \begin{macrocode}
-\DeclareBoolOption{draft}
-\DeclareComplementaryOption{final}{draft}
+\DeclareKeys[BKM]
+ {
+  draft.legacy_if_set:n         = BKM@draft,
+  final.legacy_if_set_inverse:n = BKM@draft,
+  draft.usage:n = load,
+  final.usage:n = load 
+ }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@DisableOptions}
 %    \begin{macrocode}
-\def\BKM@DisableOptions{%
-  \DisableKeyvalOption[action=warning,package=bookmark]%
-      {BKM}{draft}%
-  \DisableKeyvalOption[action=warning,package=bookmark]%
-      {BKM}{final}%
-}
-%    \end{macrocode}
-%    \end{macro}
-%    \begin{macrocode}
-\DeclareBoolOption[\ifHy@bookmarksopen true\else false\fi]{open}
+\DeclareKeys[BKM]
+ {
+    open.legacy_if_set:n = BKM@open
+   ,open.initial:e = \ifHy@bookmarksopen true\else false\fi
+ }
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@open}
 %    \begin{macrocode}
@@ -851,49 +849,51 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\DeclareStringOption[\maxdimen]{openlevel}
+\DeclareKeys[BKM]
+ {
+    openlevel.tl_set:N  = \BKM@openlevel
+   ,openlevel.initial:e = \number\@bookmarksopenlevel
+ }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@openlevel}
 %    \begin{macrocode}
-\edef\BKM@openlevel{\number\@bookmarksopenlevel}
-%    \end{macrocode}
-%    \end{macro}
-%    \begin{macrocode}
-%\DeclareStringOption[\c@tocdepth]{depth}
 \@ifundefined{Hy@bookmarksdepth}{%
   \def\BKM@depth{\c@tocdepth}%
 }{%
   \let\BKM@depth\Hy@bookmarksdepth
 }
-\define@key{BKM}{depth}[]{%
-  \edef\BKM@param{#1}%
-  \ifx\BKM@param\@empty
-    \def\BKM@depth{\c@tocdepth}%
-  \else
-    \@ifundefined{toclevel@\BKM@param}{%
-      \@onelevel@sanitize\BKM@param
-      \edef\BKM@temp{\expandafter\@car\BKM@param\@nil}%
-      \ifcase 0\expandafter\ifx\BKM@temp-1\fi
-              \expandafter\ifnum\expandafter`\BKM@temp>47 %
-                \expandafter\ifnum\expandafter`\BKM@temp<58 %
-                  1%
-                \fi
-              \fi
-              \relax
-        \PackageWarning{bookmark}{%
-          Unknown document division name (\BKM@param)\MessageBreak
-          for option `depth'%
-        }%
-      \else
-        \BKM@SetDepthOrLevel\BKM@depth\BKM@param
-      \fi
-    }{%
-      \BKM@SetDepthOrLevel\BKM@depth{%
-        \csname toclevel@\BKM@param\endcsname
-      }%
-    }%
-  \fi
-}
+\DeclareKeys[BKM]
+ {
+   depth.code:n = 
+    {%
+     \edef\BKM@param{#1}%
+     \ifx\BKM@param\@empty
+       \def\BKM@depth{\c@tocdepth}%
+     \else
+       \@ifundefined{toclevel@\BKM@param}{%
+         \@onelevel@sanitize\BKM@param
+         \edef\BKM@temp{\expandafter\@car\BKM@param\@nil}%
+         \ifcase 0\expandafter\ifx\BKM@temp-1\fi
+                 \expandafter\ifnum\expandafter`\BKM@temp>47 %
+                   \expandafter\ifnum\expandafter`\BKM@temp<58 %
+                     1%
+                   \fi
+                 \fi
+                 \relax
+           \PackageWarning{bookmark}{%
+             Unknown document division name (\BKM@param)\MessageBreak
+             for option `depth'%
+           }%
+         \else
+           \BKM@SetDepthOrLevel\BKM@depth\BKM@param
+         \fi
+       }{%
+         \BKM@SetDepthOrLevel\BKM@depth{%
+           \csname toclevel@\BKM@param\endcsname
+         }%
+       }%
+     \fi
+   }
+ }
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@depth}
 %    \begin{macrocode}
@@ -914,8 +914,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\DeclareStringOption[\BKM@currentlevel]{level}[\BKM@currentlevel]
-\define@key{BKM}{level}{%
+\newcommand\BKM@set@level[1]{%
   \edef\BKM@param{#1}%
   \ifx\BKM@param\BKM@MacroCurrentLevel
     \let\BKM@level\BKM@param
@@ -944,6 +943,12 @@
     }%
   \fi
 }
+\def\BKM@level{\BKM@currentlevel}
+\DeclareKeys[BKM]
+ {
+   level.code:n    = \BKM@set@level{#1},
+   level.default:n = \BKM@currentlevel,
+ }
 %    \end{macrocode}
 %    \begin{macro}{\BKM@MacroCurrentLevel}
 %    \begin{macrocode}
@@ -951,8 +956,11 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\DeclareBoolOption{keeplevel}
-\DeclareBoolOption{startatroot}
+\DeclareKeys[BKM]
+ {
+   keeplevel.legacy_if_set:n    = BKM@keeplevel
+   ,startatroot.legacy_if_set:n = BKM@startatroot
+ }
 %    \end{macrocode}
 %    \begin{macro}{\BKM@startatrootfalse}
 %    \begin{macrocode}
@@ -969,9 +977,10 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\define@key{BKM}{rellevel}{%
-  \BKM@CalcExpr\BKM@level{#1}+\BKM@currentlevel
-}
+\DeclareKeys[BKM]
+ {
+   rellevel.code:n = {\BKM@CalcExpr\BKM@level{#1}+\BKM@currentlevel}
+ }
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@level}
 %    \begin{macrocode}
@@ -986,9 +995,11 @@
 %    Make \xpackage{bookmark}'s option \xoption{numbered} an alias
 %    for \xpackage{hyperref}'s \xoption{bookmarksnumbered}.
 %    \begin{macrocode}
-\DeclareBoolOption[%
-  \ifHy@bookmarksnumbered true\else false\fi
-]{numbered}
+\DeclareKeys[BKM]
+ {
+  numbered.legacy_if_set:n = BKM@numbered,
+  numbered.initial:e = \ifHy@bookmarksnumbered true\else false\fi
+ }
 \g@addto@macro\BKM@numberedtrue{%
   \let\ifHy@bookmarksnumbered\iftrue
 }
@@ -1048,20 +1059,27 @@
 %    PDF specifications starts with one.
 %    \begin{macrocode}
 \bitsetReset{BKM@FontStyle}%
-\define@key{BKM}{italic}[true]{%
-  \expandafter\ifx\csname if#1\endcsname\iftrue
-    \bitsetSet{BKM@FontStyle}{0}%
-  \else
-    \bitsetClear{BKM@FontStyle}{0}%
-  \fi
-}%
-\define@key{BKM}{bold}[true]{%
-  \expandafter\ifx\csname if#1\endcsname\iftrue
-    \bitsetSet{BKM@FontStyle}{1}%
-  \else
-    \bitsetClear{BKM@FontStyle}{1}%
-  \fi
-}%
+\DeclareKeys[BKM]
+ {
+   ,italic.code:n = 
+     {
+       \expandafter\ifx\csname if#1\endcsname\iftrue
+         \bitsetSet{BKM@FontStyle}{0}%
+       \else
+         \bitsetClear{BKM@FontStyle}{0}%
+       \fi
+     }
+   ,italic.default:n = true  
+   ,bold.code:n = 
+    {
+      \expandafter\ifx\csname if#1\endcsname\iftrue
+        \bitsetSet{BKM@FontStyle}{1}%
+      \else
+        \bitsetClear{BKM@FontStyle}{1}%
+      \fi
+    }
+  ,bold.default:n = true  
+ }
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@italic}
 %    \begin{macrocode}
@@ -1088,9 +1106,10 @@
 % \paragraph{Options for color.}
 %
 %    \begin{macrocode}
-\define@key{BKM}{color}{%
-  \HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}%
-}
+\DeclareKeys[BKM]
+ {
+   color .code:n = {\HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}}%
+ }
 %    \end{macrocode}
 %    \begin{macro}{\BKM@color}
 %    \begin{macrocode}
@@ -1106,12 +1125,14 @@
 % \subsubsection{Action options}
 %
 %    \begin{macrocode}
+\ExplSyntaxOn
 \def\BKM@temp#1{%
-  \DeclareStringOption{#1}%
+  \DeclareKeys[BKM]{#1.tl_set:c = BKM@#1}%
   \expandafter\edef\csname bookmark@#1\endcsname{%
     \expandafter\noexpand\csname BKM@#1\endcsname
   }%
 }
+\ExplSyntaxOff
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@dest}
 %    \begin{macrocode}
@@ -1140,18 +1161,22 @@
 %    \end{macro}
 %
 %    \begin{macrocode}
-\define@key{BKM}{page}{%
-  \def\BKM@page{#1}%
-  \ifx\BKM@page\@empty
-  \else
-    \edef\BKM@page{\number\BKM@page}%
-    \ifnum\BKM@page>\z@
-    \else
-      \PackageError{bookmark}{Page must be positive}\@ehc
-      \def\BKM@page{1}%
-    \fi
-  \fi
-}
+\DeclareKeys[BKM]
+ {
+   page.code:n = 
+    {%
+      \def\BKM@page{#1}%
+      \ifx\BKM@page\@empty
+      \else
+       \edef\BKM@page{\number\BKM@page}%
+       \ifnum\BKM@page>\z@
+       \else
+        \PackageError{bookmark}{Page must be positive}\@ehc
+        \def\BKM@page{1}%
+       \fi
+      \fi 
+    }
+ }
 %    \end{macrocode}
 %    \begin{macro}{\BKM@page}
 %    \begin{macrocode}
@@ -1165,9 +1190,10 @@
 %    \end{macro}
 %
 %    \begin{macrocode}
-\define@key{BKM}{view}{%
-  \BKM@CheckView{#1}%
-}
+\DeclareKeys[BKM]
+ {
+   view.code:n = {\BKM@CheckView{#1}}
+ }
 %    \end{macrocode}
 %    \begin{macro}{\BKM@view}
 %    \begin{macrocode}
@@ -1387,11 +1413,11 @@
 % \subsubsection{Option \xoption{atend}}
 %
 %    \begin{macrocode}
-\DeclareBoolOption{atend}
-\g@addto@macro\BKM@DisableOptions{%
-  \DisableKeyvalOption[action=warning,package=bookmark]%
-      {BKM}{atend}%
-}
+\DeclareKeys[BKM]
+ {
+   atend.legacy_if_set:n = BKM@atend,
+   atend.usage:n = load
+ }
 %    \end{macrocode}
 %
 % \subsubsection{Option \xoption{style}}
@@ -1408,9 +1434,10 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\define@key{BKM}{style}{%
-  \BKM@StyleCall{#1}%
-}
+\DeclareKeys[BKM]
+ {
+   ,style.code:n = {\BKM@StyleCall{#1}}
+ }
 \newif\ifBKM@ok
 %    \end{macrocode}
 %    \begin{macro}{\BKM@StyleCall}
@@ -1491,8 +1518,11 @@
 % \subsubsection{Options for source file location}
 %
 %    \begin{macrocode}
-\DeclareStringOption{srcline}
-\DeclareStringOption{srcfile}
+\DeclareKeys[BKM]
+ {
+   ,srcline.tl_set:N = \BKM@srcline
+   ,srcfile.tl_set:N = \BKM@srcfile
+ }
 %    \end{macrocode}
 %
 % \subsubsection{Hook support}
@@ -1503,9 +1533,10 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-\define@key{BKM}{addtohook}{%
-  \BKM@LocalAppendToMacro\BKM@hook{#1}%
-}
+\DeclareKeys[BKM]
+ {
+   ,addtohook.code:n = {\BKM@LocalAppendToMacro\BKM@hook{#1}}
+ }
 %    \end{macrocode}
 %
 %    \begin{macro}{bookmarkget}
@@ -1529,13 +1560,11 @@
 %    \begin{macro}{\BKM@DefineDriverKey}
 %    \begin{macrocode}
 \def\BKM@DefineDriverKey#1{%
-  \define@key{BKM}{#1}[]{%
-    \def\BKM@driver{#1}%
-  }%
-  \g@addto@macro\BKM@DisableOptions{%
-    \DisableKeyvalOption[action=warning,package=bookmark]%
-        {BKM}{#1}%
-  }%
+  \DeclareKeys[BKM]
+   {
+      #1.code:n   = \def\BKM@driver{#1},
+      #1.usage:n  = load
+   }
 }
 %    \end{macrocode}
 %    \end{macro}
@@ -1546,9 +1575,15 @@
 \BKM@DefineDriverKey{dvipdfmx}
 \BKM@DefineDriverKey{xetex}
 \BKM@DefineDriverKey{vtex}
-\define@key{BKM}{dvipdfmx-outline-open}[true]{%
- \PackageWarning{bookmark}{Option 'dvipdfmx-outline-open' is obsolete
-   and ignored}{}}
+\DeclareKeys[BKM]
+ {
+   ,dvipdfmx-outline-open.code:n = 
+     {%
+       \PackageWarning{bookmark}{Option 'dvipdfmx-outline-open' is obsolete
+        and ignored}{}
+     }   
+   ,dvipdfmx-outline-open.default:n=true 
+ }   
 %    \end{macrocode}
 %    \begin{macro}{\bookmark@driver}
 %    \begin{macrocode}
@@ -1590,8 +1625,7 @@
 % \paragraph{Process options.}
 %
 %    \begin{macrocode}
-\ProcessKeyvalOptions*
-\BKM@DisableOptions
+\ProcessKeyOptions[BKM]
 %    \end{macrocode}
 %
 % \paragraph{Option \xoption{draft}}
