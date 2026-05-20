@@ -7,13 +7,24 @@ textfiles = {"README.md"}
 typesetfiles = {"bookmark.dtx"}
 installfiles={"*.sty","*.tex","*.def"}
 
-checkconfigs = {"build","config-noxetex"}
+checkconfigs = {"build"}
+checkengines =  {"pdftex","luatex"}
 
 packtdszip  = false
 
 maxprintline=10000
 checkruns = 2
 recordstatus=true
+
+specialformats = specialformats or {}
+specialformats["latex"] = specialformats["latex"] or
+  {
+    luatex     = {binary="luahbtex",format = "lualatex-dev"},
+  }
+
+typesetexe = "lualatex-dev"
+function docinit_hook() return cp("bookmark.sty", unpackdir, typesetdir) end
+
 
 tdslocations={
 "doc/latex/bookmark/bookmark-example.tex",

@@ -66,11 +66,102 @@
 %    TDS:source/latex/bookmark/bookmark.dtx
 %
 %<*driver>
+\DocumentMetadata{tagging=on}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bookmark.drv}%
-  [2023-12-10 v1.31 PDF bookmarks (HO)]%
-\documentclass{ltxdoc}
-\usepackage{holtxdoc}[2011/11/22]
+  [2023-12-10 v1.31 PDF bookmarks (HO)]%  
+\documentclass{l3in2edoc}
+\newcommand*{\xpackage}[1]{\textsf{#1}}
+\newcommand*{\xmodule}[1]{\textsf{#1}}
+\newcommand*{\xclass}[1]{\textsf{#1}}
+\newcommand*{\xoption}[1]{\textsf{#1}}
+\newcommand*{\xfile}[1]{\texttt{#1}}
+\newcommand*{\xext}[1]{\texttt{.#1}}
+\newcommand*{\xemail}[1]{%
+  \textless\texttt{#1}\textgreater%
+}
+\newcommand*{\xnewsgroup}[1]{%
+  \href{news:#1}{\nolinkurl{#1}}%
+}
+\newcommand*{\CTANpkg}[1]{%
+  \href{http://ctan.org/pkg/#1}{\nolinkurl{CTAN:pkg/#1}}%
+}
+\newcommand*{\CTAN}[1]{%
+  \href{https://ctan.org/tex-archive/#1}{\nolinkurl{CTAN:#1}}%
+}
+\providecommand*{\docstrip}{\textsf{docstrip}}
+\providecommand*{\mikTeX}{\hologo{MiKTeX}}
+
+\newenvironment{declcs}[1]{%
+  \par
+  \addvspace{4.5ex plus 1ex}%
+  \vskip -\parskip
+  \noindent
+  \hspace{-\leftmargini}%
+  \def\M##1{\texttt{\{}\meta{##1}\texttt{\}}}%
+  \def\*{\unskip\,\texttt{*}}%
+  \begin{tabular}{|l|}%
+    \hline
+    \expandafter\SpecialUsageIndex\csname #1\endcsname
+    \cs{#1}%
+}{%
+    \\%
+    \hline
+  \end{tabular}%
+  \nobreak
+  \par
+  \nobreak
+  \vspace{2.3ex}%
+  \vskip -\parskip
+  \noindent
+  \ignorespacesafterend
+}
+\makeatletter
+\providecommand*{\historyname}{History}
+\newcommand*{\StartHistory}{%
+  \section{\historyname}%
+}
+\@ifpackagelater{hyperref}{2009/11/27}{%
+  \newcommand*{\HistVersion}[1]{%
+    \subsection*{[#1]}% hash-ok
+    \addcontentsline{toc}{subsection}{[#1]}% hash-ok
+    \def\HistLabel##1{%
+      \begingroup
+        \protected@edef\@currentlabel{[#1]}% hash-ok
+        \label{##1}%
+      \endgroup
+    }%
+  }%
+}{%
+  \newcommand*{\HistVersion}[1]{%
+    \subsection*{%
+      \phantomsection
+      \addcontentsline{toc}{subsection}{[#1]}% hash-ok
+      [#1]% hash-ok
+    }%
+    \def\HistLabel##1{%
+      \begingroup
+        \protected@edef\@currentlabel{[#1]}% hash-ok
+        \label{##1}%
+      \endgroup
+    }%
+  }%
+}
+\newenvironment{History}{%
+  \StartHistory
+  \def\Version##1{%
+    \HistVersion{##1}%
+    \@ifnextchar\end{%
+      \let\endVersion\relax
+    }{%
+      \let\endVersion\enditemize
+      \itemize
+    }%
+  }%
+  \raggedright
+}{}
+\makeatother
+%\usepackage{holtxdoc}[2011/11/22]
 \begin{document}
   \DocInput{bookmark.dtx}%
 \end{document}
@@ -129,6 +220,7 @@
 %
 % \subsection{Options}
 %
+% \begin{function}{\bookmarksetup,\bookmarksetupnext,\bookmark}
 % Options can be given at four places:
 % \begin{enumerate}
 % \item \cs{usepackage}|[|\meta{options}|]{bookmark}|\\
@@ -146,6 +238,7 @@
 % Exception: Driver options, option \xoption{atend} and
 % options \xoption{draft}\slash\xoption{final}
 % cannot be changed after the package is loaded.
+%\end{function}
 %
 % \subsubsection{Options \xoption{draft} and \xoption{final}}
 %
@@ -657,7 +750,7 @@
 %
 % \paragraph{\hologo{eTeX}.}
 %
-%    \begin{macro}{\BKM@CalcExpr}
+%    \begin{macro}[int]{\BKM@CalcExpr}
 %    \begin{macrocode}
 \begingroup\expandafter\expandafter\expandafter\endgroup
 \expandafter\ifx\csname numexpr\endcsname\relax
@@ -682,7 +775,7 @@
 %
 % \paragraph{Escape features of \hologo{pdfTeX}.}
 %
-%    \begin{macro}{\BKM@EscapeName}
+%    \begin{macro}[int]{\BKM@EscapeName}
 %    \begin{macrocode}
 \def\BKM@EscapeName#1{%
   \ifx#1\@empty
@@ -692,7 +785,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@EscapeString}
+%    \begin{macro}[int]{\BKM@EscapeString}
 %    \begin{macrocode}
 \def\BKM@EscapeString#1{%
   \ifx#1\@empty
@@ -702,7 +795,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@EscapeHex}
+%    \begin{macro}[int]{\BKM@EscapeHex}
 %    \begin{macrocode}
 \def\BKM@EscapeHex#1{%
   \ifx#1\@empty
@@ -712,7 +805,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@UnescapeHex}
+%    \begin{macro}[int]{\BKM@UnescapeHex}
 %    \begin{macrocode}
 \def\BKM@UnescapeHex#1{%
   \EdefUnescapeHex#1#1%
@@ -723,10 +816,10 @@
 % \paragraph{Some helper commands}
 % Replaces some commands from ltxcmds:
 % 
-% \begin{macro}{\BKM@ReturnAfterFi}
-% \begin{macro}{\BKM@space}
-% \begin{macro}{\BKM@GlobalAppendToMacro}
-% \begin{macro}{\BKM@LocalAppendToMacro}
+% \begin{macro}[int]{\BKM@ReturnAfterFi}
+% \begin{macro}[int]{\BKM@space}
+% \begin{macro}[int]{\BKM@GlobalAppendToMacro}
+% \begin{macro}[int]{\BKM@LocalAppendToMacro}
 %    \begin{macrocode}
 \ExplSyntaxOn
 \let\BKM@LocalAppendToMacro\tl_put_right:Nn
@@ -781,7 +874,7 @@
 \newcommand*{\bookmarksetup}{\SetKeys[BKM]}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@setup}
+%    \begin{macro}[int]{\BKM@setup}
 %    \begin{macrocode}
 \def\BKM@setup#1{%
   \bookmarksetup{#1}%
@@ -806,18 +899,18 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@setupnext}
+%    \begin{macro}[int]{\BKM@setupnext}
 %    \begin{macrocode}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@HookNextClear}
+%    \begin{macro}[int]{\BKM@HookNextClear}
 %    \begin{macrocode}
 \def\BKM@HookNextClear{%
   \global\let\BKM@HookNext\@empty
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@HookNext}
+%    \begin{macro}[int]{\BKM@HookNext}
 %    \begin{macrocode}
 \BKM@HookNextClear
 %    \end{macrocode}
@@ -839,7 +932,7 @@
    ,open.initial:e = \ifHy@bookmarksopen true\else false\fi
  }
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@open}
+%    \begin{macro}[int]{\bookmark@open}
 %    \begin{macrocode}
 \def\bookmark@open{%
   \ifBKM@open\@ne\else\z@\fi
@@ -893,12 +986,12 @@
    }
  }
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@depth}
+%    \begin{macro}[int]{\bookmark@depth}
 %    \begin{macrocode}
 \def\bookmark@depth{\BKM@depth}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@SetDepthOrLevel}
+%    \begin{macro}[int]{\BKM@SetDepthOrLevel}
 %    \begin{macrocode}
 \def\BKM@SetDepthOrLevel#1#2{%
   \begingroup
@@ -948,7 +1041,7 @@
    level.default:n = \BKM@currentlevel,
  }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@MacroCurrentLevel}
+%    \begin{macro}[int]{\BKM@MacroCurrentLevel}
 %    \begin{macrocode}
 \def\BKM@MacroCurrentLevel{\BKM@currentlevel}
 %    \end{macrocode}
@@ -960,14 +1053,14 @@
    ,startatroot.legacy_if_set:n = BKM@startatroot
  }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@startatrootfalse}
+%    \begin{macro}[int]{\BKM@startatrootfalse}
 %    \begin{macrocode}
 \def\BKM@startatrootfalse{%
   \global\let\ifBKM@startatroot\iffalse
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@startatroottrue}
+%    \begin{macro}[int]{\BKM@startatroottrue}
 %    \begin{macrocode}
 \def\BKM@startatroottrue{%
   \global\let\ifBKM@startatroot\iftrue
@@ -980,12 +1073,12 @@
    rellevel.code:n = {\BKM@CalcExpr\BKM@level{#1}+\BKM@currentlevel}
  }
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@level}
+%    \begin{macro}[int]{\bookmark@level}
 %    \begin{macrocode}
 \def\bookmark@level{\BKM@level}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@currentlevel}
+%    \begin{macro}[int]{\BKM@currentlevel}
 %    \begin{macrocode}
 \def\BKM@currentlevel{0}
 %    \end{macrocode}
@@ -1011,7 +1104,7 @@
   \let\ifBKM@numbered\iffalse
 }
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@numbered}
+%    \begin{macro}[int]{\bookmark@numbered}
 %    \begin{macrocode}
 \def\bookmark@numbered{%
   \ifBKM@numbered\@ne\else\z@\fi
@@ -1021,21 +1114,21 @@
 %
 % \paragraph{Redefinitions \xpackage{hyperref}'s options}
 %
-%    \begin{macro}{\BKM@PatchHyperrefOption}
+%    \begin{macro}[int]{\BKM@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@PatchHyperrefOption#1{%
   \expandafter\BKM@@PatchHyperrefOption\csname KV@Hyp@#1\endcsname%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@PatchHyperrefOption}
+%    \begin{macro}[int]{\BKM@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@PatchHyperrefOption#1{%
   \expandafter\BKM@@@PatchHyperrefOption#1{##1}\BKM@nil#1%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@@PatchHyperrefOption}
+%    \begin{macro}[int]{\BKM@@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@@PatchHyperrefOption#1\BKM@nil#2#3{%
   \def#2##1{%
@@ -1079,21 +1172,21 @@
   ,bold.default:n = true  
  }
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@italic}
+%    \begin{macro}[int]{\bookmark@italic}
 %    \begin{macrocode}
 \def\bookmark@italic{%
   \ifnum\bitsetGet{BKM@FontStyle}{0}=1 \@ne\else\z@\fi
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@bold}
+%    \begin{macro}[int]{\bookmark@bold}
 %    \begin{macrocode}
 \def\bookmark@bold{%
   \ifnum\bitsetGet{BKM@FontStyle}{1}=1 \@ne\else\z@\fi
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@PrintStyle}
+%    \begin{macro}[int]{\BKM@PrintStyle}
 %    \begin{macrocode}
 \def\BKM@PrintStyle{%
   \bitsetGetDec{BKM@FontStyle}%
@@ -1103,18 +1196,74 @@
 %
 % \paragraph{Options for color.}
 %
+% If the PDF management is loaded we make use of l3color commands for color expressions,
+% without it they only work if xcolor has been loaded.
+% 
+%  \begin{macro}[int]{\__BKM_color_set:nn,\__BKM_color_set_aux:nwn}
+%   Color keys need to parse color expressions. Two input types are supported:
+%  |color=[rgb]{1,0,.5}| and |color=red!50!blue|.
 %    \begin{macrocode}
-\DeclareKeys[BKM]
+\ExplSyntaxOn
+\cs_new_protected:Npn \__BKM_color_set:nn #1 #2
  {
-   color .code:n = {\HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}}%
+   \tl_if_head_eq_charcode:nNTF {#2}[ %]
+    {
+      \__BKM_color_set_aux:nwn  { #1 } #2
+    }
+    {
+      \color_set:nn {#1} {#2}
+    }
  }
+
+\cs_new_protected:Npn \__BKM_color_set_aux:nwn #1 [#2] #3
+  {
+     \color_set:nnn {#1}{#2}{#3}
+  }
+
+\cs_generate_variant:Nn \__BKM_color_set:nn {ne}
+\str_new:N\g__BKM_colormodel_str
+\keys_define:nn { BKM }
+  {
+    ,colormodel .choices:nn =
+      {rgb,cmyk}
+     { \str_gset:Nn \g__BKM_colormodel_str {space-sep-#1}}
+    ,colormodel .initial:n ={rgb}
+  }
+\IfPDFManagementActiveTF
+ {
+  \DeclareKeys[BKM]
+    {
+     color.code:n =
+      {
+        \tl_if_blank:nTF {#1}
+          { \cs_set_eq:NN\BKM@color\@empty }
+          {
+            \__BKM_color_set:ne {__BKM/tmpa}{#1}
+            \color_export:nVN
+              {__BKM/tmpa}
+              \g__BKM_colormodel_str
+              \BKM@color
+          }
+       } 
+    }
+ }
+ {
+   \DeclareKeys[BKM]
+    {
+      color.code:n = 
+       {\HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}}   
+    }
+ }
+\ExplSyntaxOff       
 %    \end{macrocode}
-%    \begin{macro}{\BKM@color}
+% \end{macro}
+% 
+%    \begin{macro}[int]{\BKM@color}
 %    \begin{macrocode}
 \let\BKM@color\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@color}
+%    \begin{macro}[int]{\bookmark@color}
 %    \begin{macrocode}
 \def\bookmark@color{\BKM@color}
 %    \end{macrocode}
@@ -1132,27 +1281,27 @@
 }
 \ExplSyntaxOff
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@dest}
+%    \begin{macro}[int]{\bookmark@dest}
 %    \begin{macrocode}
 \BKM@temp{dest}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@named}
+%    \begin{macro}[int]{\bookmark@named}
 %    \begin{macrocode}
 \BKM@temp{named}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@uri}
+%    \begin{macro}[int]{\bookmark@uri}
 %    \begin{macrocode}
 \BKM@temp{uri}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@gotor}
+%    \begin{macro}[int]{\bookmark@gotor}
 %    \begin{macrocode}
 \BKM@temp{gotor}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@rawaction}
+%    \begin{macro}[int]{\bookmark@rawaction}
 %    \begin{macrocode}
 \BKM@temp{rawaction}
 %    \end{macrocode}
@@ -1176,12 +1325,12 @@
     }
  }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@page}
+%    \begin{macro}[int]{\BKM@page}
 %    \begin{macrocode}
 \let\BKM@page\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@page}
+%    \begin{macro}[int]{\bookmark@page}
 %    \begin{macrocode}
 \def\bookmark@page{\BKM@@page}
 %    \end{macrocode}
@@ -1193,24 +1342,24 @@
    view.code:n = {\BKM@CheckView{#1}}
  }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@view}
+%    \begin{macro}[int]{\BKM@view}
 %    \begin{macrocode}
 \let\BKM@view\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\bookmark@view}
+%    \begin{macro}[int]{\bookmark@view}
 %    \begin{macrocode}
 \def\bookmark@view{\BKM@view}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{BKM@CheckView}
+%    \begin{macro}[int]{BKM@CheckView}
 %    \begin{macrocode}
 \def\BKM@CheckView#1{%
   \BKM@CheckViewType#1 \@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@CheckViewType}
+%    \begin{macro}[int]{\BKM@CheckViewType}
 %    \begin{macrocode}
 \def\BKM@CheckViewType#1 #2\@nil{%
   \def\BKM@type{#1}%
@@ -1246,7 +1395,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@TestViewType}
+%    \begin{macro}[int]{\BKM@TestViewType}
 %    \begin{macrocode}
 \def\BKM@TestViewType#1{%
   \def\BKM@temp{#1}%
@@ -1260,7 +1409,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{BKM@CheckParam}
+%    \begin{macro}[int]{BKM@CheckParam}
 %    \begin{macrocode}
 \def\BKM@CheckParam#1 #2\@nil#3{%
   \def\BKM@param{#1}%
@@ -1277,14 +1426,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{BKM@CheckRect}
+%    \begin{macro}[int]{BKM@CheckRect}
 %    \begin{macrocode}
 \def\BKM@CheckRect#1#2{%
   \BKM@@CheckRect#1#2#2#2#2\@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@CheckRect}
+%    \begin{macro}[int]{\BKM@@CheckRect}
 %    \begin{macrocode}
 \def\BKM@@CheckRect#1 #2 #3 #4 #5\@nil{%
   \def\BKM@temp{0}%
@@ -1326,14 +1475,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@CheckXYZ}
+%    \begin{macro}[int]{\BKM@CheckXYZ}
 %    \begin{macrocode}
 \def\BKM@CheckXYZ#1#2{%
   \BKM@@CheckXYZ#1#2#2#2\@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@CheckXYZ}
+%    \begin{macro}[int]{\BKM@@CheckXYZ}
 %    \begin{macrocode}
 \def\BKM@@CheckXYZ#1 #2 #3 #4\@nil{%
   \def\BKM@param{#1}%
@@ -1368,14 +1517,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@null}
+%    \begin{macro}[int]{\BKM@null}
 %    \begin{macrocode}
 \def\BKM@null{null}
 \@onelevel@sanitize\BKM@null
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@CalcParam}
+%    \begin{macro}[int]{\BKM@CalcParam}
 %    \begin{macrocode}
 \def\BKM@CalcParam{%
   \begingroup
@@ -1384,7 +1533,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@CalcParam}
+%    \begin{macro}[int]{\BKM@@CalcParam}
 %    \begin{macrocode}
 \def\BKM@@CalcParam#1#2#3\@nil{%
   \ifx\calc#1%
@@ -1438,7 +1587,7 @@
  }
 \newif\ifBKM@ok
 %    \end{macrocode}
-%    \begin{macro}{\BKM@StyleCall}
+%    \begin{macro}[int]{\BKM@StyleCall}
 %    \begin{macrocode}
 \def\BKM@StyleCall#1{%
   \@ifundefined{BKM@style@#1}{%
@@ -1487,7 +1636,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@StyleStackPop}
+%    \begin{macro}[int]{\BKM@StyleStackPop}
 %    \begin{macrocode}
 \def\BKM@StyleStackPop{%
   \let\BKM@StyleEntry\relax
@@ -1497,7 +1646,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@StyleEntryCheck}
+%    \begin{macro}[int]{\BKM@StyleEntryCheck}
 %    \begin{macrocode}
 \def\BKM@StyleEntryCheck#1{%
   \def\BKM@temp{#1}%
@@ -1507,7 +1656,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@StyleStack}
+%    \begin{macro}[int]{\BKM@StyleStack}
 %    \begin{macrocode}
 \def\BKM@StyleStack{}
 %    \end{macrocode}
@@ -1525,7 +1674,7 @@
 %
 % \subsubsection{Hook support}
 %
-%    \begin{macro}{\BKM@hook}
+%    \begin{macro}[int]{\BKM@hook}
 %    \begin{macrocode}
 \def\BKM@hook{}
 %    \end{macrocode}
@@ -1555,7 +1704,7 @@
 %
 % \paragraph{Driver detection.}
 %
-%    \begin{macro}{\BKM@DefineDriverKey}
+%    \begin{macro}[int]{\BKM@DefineDriverKey}
 %    \begin{macrocode}
 \def\BKM@DefineDriverKey#1{%
   \DeclareKeys[BKM]
@@ -1583,7 +1732,7 @@
    ,dvipdfmx-outline-open.default:n=true 
  }   
 %    \end{macrocode}
-%    \begin{macro}{\bookmark@driver}
+%    \begin{macro}[int]{\bookmark@driver}
 %    \begin{macrocode}
 \def\bookmark@driver{\BKM@driver}
 %    \end{macrocode}
@@ -1596,7 +1745,7 @@
 \providecommand*{\BookmarkDriverDefault}{dvips}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@driver}
+%    \begin{macro}[int]{\BKM@driver}
 % Lua\TeX\ and pdf\TeX\ share driver.
 %    \begin{macrocode}
 \ifpdf
@@ -1623,7 +1772,10 @@
 % \paragraph{Process options.}
 %
 %    \begin{macrocode}
+\let\BKM@raw@classoptionlist\@raw@classoptionslist
+\let\@raw@classoptionslist\relax
 \ProcessKeyOptions[BKM]
+\let\@raw@classoptionslist\BKM@raw@classoptionlist
 %    \end{macrocode}
 %
 % \paragraph{Option \xoption{draft}}
@@ -1750,7 +1902,7 @@
 %    \end{macro}
 %
 %    Section number, text, label, level, file
-%    \begin{macro}{\Hy@writebookmark}
+%    \begin{macro}[int]{\Hy@writebookmark}
 %    \begin{macrocode}
 \def\Hy@writebookmark#1#2#3#4#5{%
   \ifnum#4>\BKM@depth\relax
@@ -1777,7 +1929,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\ReadBookmarks}
+%    \begin{macro}[int]{\ReadBookmarks}
 %    \begin{macrocode}
 \let\ReadBookmarks\relax
 %    \end{macrocode}
@@ -1796,25 +1948,25 @@
   [2023-12-10 v1.31 bookmark driver for dvipdfm (HO)]%
 %    \end{macrocode}
 %
-%    \begin{macro}{\BKM@id}
+%    \begin{macro}[int]{\BKM@id}
 %    \begin{macrocode}
 \newcount\BKM@id
 \BKM@id=\z@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@0}
+%    \begin{macro}[int]{\BKM@0}
 %    \begin{macrocode}
 \@namedef{BKM@0}{000}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\ifBKM@sw}
+%    \begin{macro}[int]{\ifBKM@sw}
 %    \begin{macrocode}
 \newif\ifBKM@sw
 %    \end{macrocode}
 %    \end{macro}
 %    
-% \begin{macro}{\BKM@struct@dest}
+% \begin{macro}[int]{\BKM@struct@dest}
 % Support for structure destinations in the outline.
 %    \begin{macrocode}
 \newcommand\BKM@struct@dest{}
@@ -1965,7 +2117,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@getx}
+%    \begin{macro}[int]{\BKM@getx}
 %    \begin{macrocode}
 \def\BKM@getx#1#2#3{%
   \def\BKM@x@parent{#1}%
@@ -1997,19 +2149,19 @@
 \fi
 %    \end{macrocode}
 %
-%    \begin{macro}{\BKM@id}
+%    \begin{macro}[int]{\BKM@id}
 %    \begin{macrocode}
 \newcount\BKM@id
 \BKM@id=\z@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@0}
+%    \begin{macro}[int]{\BKM@0}
 %    \begin{macrocode}
 \@namedef{BKM@0}{00}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\ifBKM@sw}
+%    \begin{macro}[int]{\ifBKM@sw}
 %    \begin{macrocode}
 \newif\ifBKM@sw
 %    \end{macrocode}
@@ -2142,7 +2294,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@getx}
+%    \begin{macro}[int]{\BKM@getx}
 %    \begin{macrocode}
 \def\BKM@getx#1#2{%
   \def\BKM@x@parent{#1}%
@@ -2150,7 +2302,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@toRGB}
+%    \begin{macro}[int]{\BKM@toRGB}
 %    \begin{macrocode}
 \def\BKM@toRGB#1 #2 #3\@nil{%
   \let\BKM@RGBcolor\@empty
@@ -2160,7 +2312,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@toRGBComponent}
+%    \begin{macro}[int]{\BKM@toRGBComponent}
 %    \begin{macrocode}
 \def\BKM@toRGBComponent#1{%
   \dimen@=#1pt\relax
@@ -2190,7 +2342,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@toHexDigit}
+%    \begin{macro}[int]{\BKM@toHexDigit}
 %    \begin{macrocode}
 \def\BKM@toHexDigit#1{%
   \ifcase\expandafter\@firstofone\expandafter{\number#1} %
@@ -2205,7 +2357,7 @@
   \catcode`\|=0 %
   \catcode`\\=12 %
 %    \end{macrocode}
-%    \begin{macro}{\BKM@vtex@title}
+%    \begin{macro}[int]{\BKM@vtex@title}
 %    \begin{macrocode}
   |gdef|BKM@vtex@title{%
     |@onelevel@sanitize|BKM@title
@@ -2218,7 +2370,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@leftparen}
+%    \begin{macro}[int]{\BKM@vtex@leftparen}
 %    \begin{macrocode}
   |gdef|BKM@vtex@leftparen#1\(#2|@nil{%
     #1%
@@ -2232,7 +2384,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@rightparen}
+%    \begin{macro}[int]{\BKM@vtex@rightparen}
 %    \begin{macrocode}
   |gdef|BKM@vtex@rightparen#1\)#2|@nil{%
     #1%
@@ -2246,7 +2398,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@zero}
+%    \begin{macro}[int]{\BKM@vtex@zero}
 %    \begin{macrocode}
   |gdef|BKM@vtex@zero#1\0#2|@nil{%
     #1%
@@ -2260,7 +2412,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@one}
+%    \begin{macro}[int]{\BKM@vtex@one}
 %    \begin{macrocode}
   |gdef|BKM@vtex@one#1\1#2|@nil{%
     #1%
@@ -2274,7 +2426,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@two}
+%    \begin{macro}[int]{\BKM@vtex@two}
 %    \begin{macrocode}
   |gdef|BKM@vtex@two#1\2#2|@nil{%
     #1%
@@ -2288,7 +2440,7 @@
   }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@vtex@three}
+%    \begin{macro}[int]{\BKM@vtex@three}
 %    \begin{macrocode}
   |gdef|BKM@vtex@three#1\3#2|@nil{%
     #1%
@@ -2319,7 +2471,7 @@
   [2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO)]%
 %    \end{macrocode}
 %
-%    \begin{macro}{\BKM@DO@entry}
+%    \begin{macro}[int]{\BKM@DO@entry}
 %    \begin{macrocode}
 \def\BKM@DO@entry#1#2{%
   \begingroup
@@ -2422,7 +2574,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@DefGotoNameAction}
+%    \begin{macro}[int]{\BKM@DefGotoNameAction}
 %    Macro \cs{BKM@DefGotoNameAction} is a hook for
 %    package \xpackage{hypdestopt}.
 %    \begin{macrocode}
@@ -2456,7 +2608,7 @@
 %    \begin{macrocode}
 %<*pdftex|pdfmark>
 %    \end{macrocode}
-%    \begin{macro}{\BKM@SourceLocation}
+%    \begin{macro}[int]{\BKM@SourceLocation}
 %    \begin{macrocode}
 \def\BKM@SourceLocation{%
   \ifx\BKM@DO@srcfile\@empty
@@ -2493,13 +2645,13 @@
 \ProvidesFile{bkm-dvips.def}%
   [2023-12-10 v1.31 bookmark driver for dvips (HO)]%
 %    \end{macrocode}
-%    \begin{macro}{\BKM@PSHeaderFile}
+%    \begin{macro}[int]{\BKM@PSHeaderFile}
 %    \begin{macrocode}
 \def\BKM@PSHeaderFile#1{%
   \special{PSfile=#1}%
 }
 %    \end{macrocode}
-%    \begin{macro}{\BKM@filename}
+%    \begin{macro}[int]{\BKM@filename}
 %    \begin{macrocode}
 \def\BKM@filename{\jobname.out.ps}
 %    \end{macrocode}
@@ -2521,7 +2673,7 @@
 %<*pdfmark>
 %    \end{macrocode}
 %
-%    \begin{macro}{\BKM@pdfmark@out}
+%    \begin{macro}[int]{\BKM@pdfmark@out}
 %    Do not use package \xpackage{rerunfilecheck} here, because
 %    the file \cs{BKM@filename} is not read during the \hologo{TeX} run.
 %    \begin{macrocode}
@@ -2545,7 +2697,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@write}
+%    \begin{macro}[int]{\BKM@write}
 %    \begin{macrocode}
 \def\BKM@write#{%
   \immediate\write\BKM@file
@@ -2553,7 +2705,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@DO@entry}
+%    \begin{macro}[int]{\BKM@DO@entry}
 %    The specification for pdfmark says that |/Color| is the
 %    name of the key for color, however ghostscript only passes
 %    the key into the PDF file, thus the key name must be |/C|.
@@ -2697,19 +2849,19 @@
  \immediate\write\@mainaux{\string\providecommand\string\BKM@entry[2]{}}}
 %    \end{macrocode}
 %
-%    \begin{macro}{\BKM@id}
+%    \begin{macro}[int]{\BKM@id}
 %    \begin{macrocode}
 \newcount\BKM@id
 \BKM@id=\z@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@0}
+%    \begin{macro}[int]{\BKM@0}
 %    \begin{macrocode}
 \@namedef{BKM@0}{000}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\ifBKM@sw}
+%    \begin{macro}[int]{\ifBKM@sw}
 %    \begin{macrocode}
 \newif\ifBKM@sw
 %    \end{macrocode}
@@ -2792,7 +2944,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@getx}
+%    \begin{macro}[int]{\BKM@getx}
 %    \begin{macrocode}
 \def\BKM@getx#1#2#3{%
   \def\BKM@x@parent{#1}%
@@ -2801,7 +2953,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@auxentry}
+%    \begin{macro}[int]{\BKM@auxentry}
 %    \begin{macrocode}
 \def\BKM@auxentry#1{%
   \expandafter\ifx\csname BKM@#1\endcsname\@empty
@@ -2812,7 +2964,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}{\BKM@InitSourceLocation}
+%    \begin{macro}[int]{\BKM@InitSourceLocation}
 %    \begin{macrocode}
 \def\BKM@InitSourceLocation{%
   \edef\BKM@srcline{\the\inputlineno}%
@@ -2825,7 +2977,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@LuaTeX@InitFile}
+%    \begin{macro}[int]{\BKM@LuaTeX@InitFile}
 %    \begin{macrocode}
 \ifluatex
     \def\BKM@LuaTeX@InitFile{%
@@ -3085,11 +3237,11 @@
 % documentation with pdf\LaTeX:
 % \begin{quote}
 %\begin{verbatim}
-%pdflatex bookmark.dtx
-%makeindex -s gind.ist bookmark.idx
-%pdflatex bookmark.dtx
-%makeindex -s gind.ist bookmark.idx
-%pdflatex bookmark.dtx
+% pdflatex bookmark.dtx
+% makeindex -s gind.ist bookmark.idx
+% pdflatex bookmark.dtx
+% makeindex -s gind.ist bookmark.idx
+% pdflatex bookmark.dtx
 %\end{verbatim}
 % \end{quote}
 %
