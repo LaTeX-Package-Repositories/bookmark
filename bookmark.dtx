@@ -219,19 +219,17 @@
 % \item[\xoption{color}:] Here the color can be given as
 %   color specification of packages \xpackage{color} or \xpackage{xcolor}.
 %   An empty value means that the color property is not set.
-%   Without package \xpackage{xcolor} the recognized values
-%   are restricted to
+%   The recognized values are 
 %   \begin{itemize}
 %   \item Empty value, no color is set,\\
 %         example: |color={}|
 %   \item Explicit color specification of color model rgb,\\
 %         example for red: |color=[rgb]{1,0,0}|
 %   \item Explicit color specification of color model gray,\\
-%         example for dark gray: |color=[gray]{0.25}|
+%         example for dark gray: |color=[gray]{0.25}|\\
+%   \item Color expressions like |color=red!50!white|. 
+%   This requires that either the PDF management or the \xpackage{xcolor} is loaded.       
 %   \end{itemize}
-%   Note that this restriction also holds if package \xpackage{color}
-%   is loaded. With \xpackage{xcolor}, however, the full range
-%   of color specifications can be used.
 % \end{description}
 %
 % \subsubsection{Action options}
