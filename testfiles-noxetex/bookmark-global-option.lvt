@@ -1,0 +1,12 @@
+\input{regression-test}
+\documentclass[open]{book}
+\usepackage{bookmark}
+\begin{document}
+\START
+\makeatletter
+\typeout{\ifBKM@open OPEN \else CLOSED \fi}
+\part{part}
+\chapter{Chapter 1}
+\section{Section 1}
+\subsection{subsection}
+\end{document} 

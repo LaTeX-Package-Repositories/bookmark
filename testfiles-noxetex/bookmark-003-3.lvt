@@ -1,0 +1,20 @@
+\ExplSyntaxOn
+\debug_on:n { check-declarations , deprecation }
+\ExplSyntaxOff
+\input{regression-test}
+\documentclass{article}
+\usepackage{bookmark}
+\begin{document}
+\START
+test uri
+
+\bookmark[uri=https://www.example.com]{uri simple}
+
+%Unclear if this is correct:
+\bookmark[uri=https://www.example.com\#abc]{uri with hash}
+
+\bookmark[uri=https://www.example.com\%abc]{uri with percent}
+
+\bookmark[uri=https://www.köln.de]{uri with non-ascii char}
+
+\end{document} 

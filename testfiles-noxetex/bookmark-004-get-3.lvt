@@ -1,0 +1,18 @@
+\input{regression-test}
+\documentclass{book}
+\usepackage{bookmark}
+\bookmarksetup{open}
+\bookmarksetup{  
+  addtohook={%
+    \ifnum\bookmarkget{level}=0 %
+        \bookmarksetup{bold}%
+    \fi
+  }
+}
+\begin{document}
+\START
+\part{part}
+\chapter{Chapter 1}
+\section{Section 1}
+\subsection{subsection}
+\end{document} 
