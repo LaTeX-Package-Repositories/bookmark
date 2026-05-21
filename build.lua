@@ -23,6 +23,7 @@ specialformats["latex"] = specialformats["latex"] or
   }
 
 typesetexe = "lualatex-dev"
+typesetruns = 4
 function docinit_hook() return cp("bookmark.sty", unpackdir, typesetdir) end
 
 

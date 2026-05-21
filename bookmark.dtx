@@ -71,10 +71,13 @@
 \ProvidesFile{bookmark.drv}%
   [2023-12-10 v1.31 PDF bookmarks (HO)]%  
 \documentclass{l3in2edoc}
+
+\DeclareDocElement[printtype=\textit{key},idxtype=key,idxgroup=Keys]{Key}{keydecl}
+\NewDocumentCommand\xoption{m}{\textsf{#1\DescribeKey[noprint]{#1}}}
+
 \newcommand*{\xpackage}[1]{\textsf{#1}}
 \newcommand*{\xmodule}[1]{\textsf{#1}}
 \newcommand*{\xclass}[1]{\textsf{#1}}
-\newcommand*{\xoption}[1]{\textsf{#1}}
 \newcommand*{\xfile}[1]{\texttt{#1}}
 \newcommand*{\xext}[1]{\texttt{.#1}}
 \newcommand*{\xemail}[1]{%
@@ -92,76 +95,15 @@
 \providecommand*{\docstrip}{\textsf{docstrip}}
 \providecommand*{\mikTeX}{\hologo{MiKTeX}}
 
-\newenvironment{declcs}[1]{%
-  \par
-  \addvspace{4.5ex plus 1ex}%
-  \vskip -\parskip
-  \noindent
-  \hspace{-\leftmargini}%
-  \def\M##1{\texttt{\{}\meta{##1}\texttt{\}}}%
-  \def\*{\unskip\,\texttt{*}}%
-  \begin{tabular}{|l|}%
-    \hline
-    \expandafter\SpecialUsageIndex\csname #1\endcsname
-    \cs{#1}%
-}{%
-    \\%
-    \hline
-  \end{tabular}%
-  \nobreak
-  \par
-  \nobreak
-  \vspace{2.3ex}%
-  \vskip -\parskip
-  \noindent
-  \ignorespacesafterend
-}
-\makeatletter
-\providecommand*{\historyname}{History}
-\newcommand*{\StartHistory}{%
-  \section{\historyname}%
-}
-\@ifpackagelater{hyperref}{2009/11/27}{%
-  \newcommand*{\HistVersion}[1]{%
-    \subsection*{[#1]}% hash-ok
-    \addcontentsline{toc}{subsection}{[#1]}% hash-ok
-    \def\HistLabel##1{%
-      \begingroup
-        \protected@edef\@currentlabel{[#1]}% hash-ok
-        \label{##1}%
-      \endgroup
-    }%
-  }%
-}{%
-  \newcommand*{\HistVersion}[1]{%
-    \subsection*{%
-      \phantomsection
-      \addcontentsline{toc}{subsection}{[#1]}% hash-ok
-      [#1]% hash-ok
-    }%
-    \def\HistLabel##1{%
-      \begingroup
-        \protected@edef\@currentlabel{[#1]}% hash-ok
-        \label{##1}%
-      \endgroup
-    }%
-  }%
-}
-\newenvironment{History}{%
-  \StartHistory
-  \def\Version##1{%
-    \HistVersion{##1}%
-    \@ifnextchar\end{%
-      \let\endVersion\relax
-    }{%
-      \let\endVersion\enditemize
-      \itemize
-    }%
-  }%
-  \raggedright
-}{}
-\makeatother
-%\usepackage{holtxdoc}[2011/11/22]
+
+
+\newenvironment{Version}[1]
+  {\subsection*[toc={[#1]}]{[#1]}\begin{itemize}}
+  {\end{itemize}} 
+\newenvironment{History}
+ {\section{History}\raggedright}{}
+
+
 \begin{document}
   \DocInput{bookmark.dtx}%
 \end{document}
@@ -190,7 +132,7 @@
 % \section{Documentation}
 %
 % \subsection{Introduction}
-%
+% 
 % This package \xpackage{bookmark} tries to provide a more modern
 % management for bookmarks:
 % \begin{itemize}
@@ -259,11 +201,11 @@
 % might help in the organization of the preamble, for example:
 %\begin{quote}
 %\begin{verbatim}
-%\documentclass[draft]{article}
-%\usepackage{ifdraft}
-%\ifdraft{%
-%   \PassOptionsToPackage{draft}{bookmark}%
-%}{}
+% \documentclass[draft]{article}
+% \usepackage{ifdraft}
+% \ifdraft{%
+%    \PassOptionsToPackage{draft}{bookmark}%
+% }{}
 %\end{verbatim}
 %\end{quote}
 %
@@ -277,11 +219,13 @@
 % The default for the DVI drivers is \xoption{dvips}. This can
 % be changed in the configuration file \xfile{bookmark.cfg} by
 % \cs{BookmarkDriverDefault}, e.g.:
+% \begin{function}{\BookmarkDriverDefault}
 % \begin{quote}
 % |\def\BookmarkDriverDefault{dvipdfm}|
 % \end{quote}
-% The current versions of the drivers uses new \LaTeX-hooks and tests if the PDF management
-% is active and so requires a format newer than 2022-06-01.
+% \end{function}
+% The current versions of the drivers use \LaTeX-hooks and test if the PDF management
+% is active and so require a format newer than 2022-06-01.
 % 
 % \paragraph{Open bookmarks with dvipdfmx.} Older version of
 % the package had an option \xoption{dvipdfmx-outline-open}
@@ -429,18 +373,18 @@
 %    last chapters that should not be put below the last part:
 %    \begin{quote}
 %\begin{verbatim}
-%\documentclass{book}
-%[...]
-%\begin{document}
-%  \part{First part}
-%    \chapter{First chapter in first part}
-%    [...]
-%  \part{Second part}
-%    \chapter{First chapter in second part}
-%    [...]
-%  \bookmarksetup{startatroot}
-%  \chapter{Index}% does not belong to second part
-%\end{document}
+% \documentclass{book}
+% [...]
+% \begin{document}
+%   \part{First part}
+%     \chapter{First chapter in first part}
+%     [...]
+%   \part{Second part}
+%     \chapter{First chapter in second part}
+%     [...]
+%   \bookmarksetup{startatroot}
+%   \chapter{Index}% does not belong to second part
+% \end{document}
 %\end{verbatim}
 %    \end{quote}
 % \end{description}
@@ -449,10 +393,13 @@
 %
 % A style is a group of option settings. It can be defined
 % by macro \cs{bookmarkdefinestyle} and is used by option \xoption{style}.
-% \begin{declcs}{bookmarkdefinestyle} \M{name} \M{key value list}
-% \end{declcs}
+% \begin{function}{\bookmarkdefinestyle} 
+% \begin{syntax}
+% \cs{bookmarkdefinestyle}\Arg{name}\Arg{key value list}
+% \end{syntax}
 % The \meta{key value list} of option settings is assigned the
 % style \meta{name}.
+% \end{function}
 %
 % \begin{description}
 % \item[\xoption{style}:]
@@ -472,8 +419,12 @@
 %   Code, given as value to this option is added to the hook.
 % \end{description}
 %
-% \begin{declcs}{bookmarkget} \M{option}
-% \end{declcs}
+% \begin{function}{\bookmarkget}
+% \begin{syntax}
+% \cs{bookmarkget}\Arg{option}
+% \end{syntax}
+% \end{function}
+% 
 % Macro \cs{bookmarkget} extracts the value of the latest option
 % setting of option \meta{option}. In case of boolean options number
 % one is returned, if the boolean option is enabled, otherwise the
@@ -540,29 +491,34 @@
 % \end{quote}
 %
 % The following commands are also available:
-% \begin{quote}
-%   \cs{pdfbookmark}\\
-%   \cs{currentpdfbookmark}\\
-%   \cs{subpdfbookmark}\\
-%   \cs{belowpdfbookmark}
-% \end{quote}
+% \begin{function}{\pdfbookmark,\currentpdfbookmark,\subpdfbookmark,\belowpdfbookmark}
+% \begin{syntax}
+%   \cs{pdfbookmark}\oarg{level}\Arg{text}\Arg{name}\\
+%   \cs{currentpdfbookmark}\Arg{text}\Arg{name}\\
+%   \cs{subpdfbookmark}\Arg{text}\Arg{name}\\
+%   \cs{belowpdfbookmark}\Arg{text}\Arg{name}
+% \end{syntax}
+% They are documented in the hyperref documentation.
+% \end{function}
 %
 % \subsection{Adding bookmarks at the end}
 %
 % Package option \xoption{atend} enables the following macro:
-% \begin{declcs}{BookmarkAtEnd}
-%   \M{stuff}
-% \end{declcs}
+% \begin{function}{\BookmarkAtEnd}
+% \begin{syntax}
+% \cs{BookmarkAtEnd}\Arg{stuff}
+% \end{syntax}
+% \end{function}
 % Macro \cs{BookmarkAtEnd} puts \meta{stuff} at the end
 % of the document. \meta{stuff} means bookmark commands.
 % Example:
 % \begin{quote}
 %\begin{verbatim}
-%\usepackage[atend]{bookmark}
-%\BookmarkAtEnd{%
-%  \bookmarksetup{startatroot}%
-%  \bookmark[named=LastPage, level=0]{Last page}%
-%}
+% \usepackage[atend]{bookmark}
+% \BookmarkAtEnd{%
+%   \bookmarksetup{startatroot}%
+%   \bookmark[named=LastPage, level=0]{Last page}%
+% }
 %\end{verbatim}
 % \end{quote}
 %
@@ -570,13 +526,13 @@
 % in \cs{bookmark}:
 % \begin{quote}
 %\begin{verbatim}
-%\BookmarkAtEnd{%
-%  \bookmark[
-%    startatroot,
-%    named=LastPage,
-%    level=0,
-%  ]{Last page}%
-%}
+% \BookmarkAtEnd{%
+%   \bookmark[
+%     startatroot,
+%     named=LastPage,
+%     level=0,
+%   ]{Last page}%
+% }
 %\end{verbatim}
 % \end{quote}
 %
@@ -587,22 +543,17 @@
 %   adding bookmarks at the end of the document depends
 %   on the driver.
 %
-%   The driver \xoption{pdftex}
-%   use package \xpackage{atveryend}'s
-%   for this purpose. \cs{AtEndDocument} is too early,
-%   the last page might not been shipped out. Because the \xext{aux}
-%   file is needed, this driver use \cs{AfterLastShipout}.
-%
+%   The driver \xoption{pdftex} (used by \hologo{pdfLaTeX} and \hologo{LuaLaTeX}
+%   uses the hook \hook{enddocument/afterlastpage} 
+%    
 %   The implementation of the other drivers
-%   (\xoption{dvipdfm}, \xoption{xetex}, \xoption{vtex})
+%   (\xoption{dvipdfm}, \xoption{xetex}, \xoption{vtex}, \xoption{dvips})
 %   depends on
 %   \cs{special} that does not have an effect after the last
-%   page. In this case \cs{AtEndDvi} of package \xpackage{atenddvi}
-%   helps. It puts its argument on last page of the document.
+%   page. In this case the hook \hook{shipout/lastpage} is used.
 %   Two \hologo{LaTeX} runs are necessary at least, because
 %   the last page is detected by a reference.
-%
-%   \xoption{dvips} uses now the new LaTeX hook \texttt{shipout/lastpage}.
+%   
 % \item
 %   The time of expansion of the argument of \cs{BookmarkAtEnd}
 %   is not specified. This can happen immediately or at the end
@@ -610,13 +561,13 @@
 % \end{itemize}
 %
 % \subsection{Structure destinations}
-% If tagging is activated with e.g. 
+% If tagging is activated with 
 % \begin{verbatim}
-% \DocumentMetadata{testphase=phase-III} %or some other phase a
+% \DocumentMetadata{tagging=on} 
 % \end{verbatim}
 % the outlines will also use structure destinations, these are destination
-% bound not to a page but to a structure. This works only with pdftex, luatex and
-% xetex/dvipdfmx. 
+% bound not to a page but to a structure. This works only with \hologo{pdfLaTeX}, \hologo{LuaLaTeX} and
+% \hologo{XeLaTeX}. 
 % 
 % 
 % \subsection{Limitations/ToDos}
@@ -736,7 +687,9 @@
 % }
 %
 % \section{Implementation}
-%
+% \ExplSyntaxOn
+% \tl_gset:Nn \g__codedoc_module_name_tl{BKM}
+% \ExplSyntaxOff
 % \subsection{Package}
 %
 %    \begin{macrocode}
@@ -899,10 +852,6 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@setupnext}
-%    \begin{macrocode}
-%    \end{macrocode}
-%    \end{macro}
 %    \begin{macro}[int]{\BKM@HookNextClear}
 %    \begin{macrocode}
 \def\BKM@HookNextClear{%
@@ -916,22 +865,27 @@
 %    \end{macrocode}
 %    \end{macro}
 %
+% \begin{keydecl}{draft,final}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-  draft.legacy_if_set:n         = BKM@draft,
-  final.legacy_if_set_inverse:n = BKM@draft,
-  draft.usage:n = load,
-  final.usage:n = load 
+   ,draft.legacy_if_set:n         = BKM@draft
+   ,final.legacy_if_set_inverse:n = BKM@draft
+   ,draft.usage:n = load
+   ,final.usage:n = load 
  }
 %    \end{macrocode}
+% \end{keydecl}
+% 
+% \begin{keydecl}{open}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-    open.legacy_if_set:n = BKM@open
+   ,open.legacy_if_set:n = BKM@open
    ,open.initial:e = \ifHy@bookmarksopen true\else false\fi
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\bookmark@open}
 %    \begin{macrocode}
 \def\bookmark@open{%
@@ -939,22 +893,32 @@
 }
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{openlevel}   
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-    openlevel.tl_set:N  = \BKM@openlevel
+   ,openlevel.tl_set:N  = \BKM@openlevel
    ,openlevel.initial:e = \number\@bookmarksopenlevel
  }
 %    \end{macrocode}
+% \end{keydecl}
+% 
+
+% \begin{macro}[int]{\BKM@depth}
 %    \begin{macrocode}
 \@ifundefined{Hy@bookmarksdepth}{%
   \def\BKM@depth{\c@tocdepth}%
 }{%
   \let\BKM@depth\Hy@bookmarksdepth
 }
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{keydecl}{depth}
+%    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   depth.code:n = 
+   ,depth.code:n = 
     {%
      \edef\BKM@param{#1}%
      \ifx\BKM@param\@empty
@@ -986,11 +950,13 @@
    }
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\bookmark@depth}
 %    \begin{macrocode}
 \def\bookmark@depth{\BKM@depth}
 %    \end{macrocode}
 %    \end{macro}
+%    
 %    \begin{macro}[int]{\BKM@SetDepthOrLevel}
 %    \begin{macrocode}
 \def\BKM@SetDepthOrLevel#1#2{%
@@ -1004,6 +970,8 @@
 }
 %    \end{macrocode}
 %    \end{macro}
+%    
+% \begin{macro}[int]{\BKM@set@level}
 %    \begin{macrocode}
 \newcommand\BKM@set@level[1]{%
   \edef\BKM@param{#1}%
@@ -1034,25 +1002,37 @@
     }%
   \fi
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}[int]{\BKM@level}
+%    \begin{macrocode}
 \def\BKM@level{\BKM@currentlevel}
+%    \end{macrocode}
+% \end{macro}
+% \begin{keydecl}{level}
+%    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   level.code:n    = \BKM@set@level{#1},
-   level.default:n = \BKM@currentlevel,
+   ,level.code:n    = \BKM@set@level{#1}
+   ,level.default:n = \BKM@currentlevel
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\BKM@MacroCurrentLevel}
 %    \begin{macrocode}
 \def\BKM@MacroCurrentLevel{\BKM@currentlevel}
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{keeplevel,startatroot}    
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   keeplevel.legacy_if_set:n    = BKM@keeplevel
+   ,keeplevel.legacy_if_set:n    = BKM@keeplevel
    ,startatroot.legacy_if_set:n = BKM@startatroot
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\BKM@startatrootfalse}
 %    \begin{macrocode}
 \def\BKM@startatrootfalse{%
@@ -1060,6 +1040,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
+%    
 %    \begin{macro}[int]{\BKM@startatroottrue}
 %    \begin{macrocode}
 \def\BKM@startatroottrue{%
@@ -1067,12 +1048,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{rellevel}    
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   rellevel.code:n = {\BKM@CalcExpr\BKM@level{#1}+\BKM@currentlevel}
+   ,rellevel.code:n = {\BKM@CalcExpr\BKM@level{#1}+\BKM@currentlevel}
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\bookmark@level}
 %    \begin{macrocode}
 \def\bookmark@level{\BKM@level}
@@ -1083,13 +1066,14 @@
 \def\BKM@currentlevel{0}
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{numbered}    
 %    Make \xpackage{bookmark}'s option \xoption{numbered} an alias
 %    for \xpackage{hyperref}'s \xoption{bookmarksnumbered}.
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-  numbered.legacy_if_set:n = BKM@numbered,
-  numbered.initial:e = \ifHy@bookmarksnumbered true\else false\fi
+   ,numbered.legacy_if_set:n = BKM@numbered
+   ,numbered.initial:e = \ifHy@bookmarksnumbered true\else false\fi
  }
 \g@addto@macro\BKM@numberedtrue{%
   \let\ifHy@bookmarksnumbered\iftrue
@@ -1104,6 +1088,8 @@
   \let\ifBKM@numbered\iffalse
 }
 %    \end{macrocode}
+% \end{keydecl}
+%
 %    \begin{macro}[int]{\bookmark@numbered}
 %    \begin{macrocode}
 \def\bookmark@numbered{%
@@ -1148,6 +1134,7 @@
 %
 %    Caution: Package \xpackage{bitset} is zero-based, the
 %    PDF specifications starts with one.
+% \begin{keydecl}{italic,bold}    
 %    \begin{macrocode}
 \bitsetReset{BKM@FontStyle}%
 \DeclareKeys[BKM]
@@ -1169,9 +1156,10 @@
         \bitsetClear{BKM@FontStyle}{1}%
       \fi
     }
-  ,bold.default:n = true  
+   ,bold.default:n = true  
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\bookmark@italic}
 %    \begin{macrocode}
 \def\bookmark@italic{%
@@ -1197,7 +1185,7 @@
 % \paragraph{Options for color.}
 %
 % If the PDF management is loaded we make use of l3color commands for color expressions,
-% without it they only work if xcolor has been loaded.
+% without it they only work if \xpackage{xcolor} has been loaded.
 % 
 %  \begin{macro}[int]{\__BKM_color_set:nn,\__BKM_color_set_aux:nwn}
 %   Color keys need to parse color expressions. Two input types are supported:
@@ -1222,6 +1210,10 @@
 
 \cs_generate_variant:Nn \__BKM_color_set:nn {ne}
 \str_new:N\g__BKM_colormodel_str
+%    \end{macrocode}
+% \end{macro}
+%\begin{keydecl}{colormodel}
+%    \begin{macrocode}
 \keys_define:nn { BKM }
   {
     ,colormodel .choices:nn =
@@ -1229,12 +1221,17 @@
      { \str_gset:Nn \g__BKM_colormodel_str {space-sep-#1}}
     ,colormodel .initial:n ={rgb}
   }
+%    \end{macrocode}
+% \end{keydecl}
+% If the PDF management is active, we use the l3color export function.
+% \begin{keydecl}{color}
+%    \begin{macrocode}
 \IfPDFManagementActiveTF
  {
   \DeclareKeys[BKM]
     {
-     color.code:n =
-      {
+      ,color.code:n =
+       {
         \tl_if_blank:nTF {#1}
           { \cs_set_eq:NN\BKM@color\@empty }
           {
@@ -1250,13 +1247,13 @@
  {
    \DeclareKeys[BKM]
     {
-      color.code:n = 
-       {\HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}}   
+      ,color.code:n = 
+        {\HyColor@BookmarkColor{#1}\BKM@color{bookmark}{color}}   
     }
  }
 \ExplSyntaxOff       
 %    \end{macrocode}
-% \end{macro}
+% \end{keydecl}
 % 
 %    \begin{macro}[int]{\BKM@color}
 %    \begin{macrocode}
@@ -1271,6 +1268,7 @@
 %
 % \subsubsection{Action options}
 %
+% \begin{keydecl}{dest,named,uri,gotor,rawaction}
 %    \begin{macrocode}
 \ExplSyntaxOn
 \def\BKM@temp#1{%
@@ -1306,12 +1304,13 @@
 \BKM@temp{rawaction}
 %    \end{macrocode}
 %    \end{macro}
-%
+% \end{keydecl}
+% \begin{keydecl}{page}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   page.code:n = 
-    {%
+   ,page.code:n = 
+     {%
       \def\BKM@page{#1}%
       \ifx\BKM@page\@empty
       \else
@@ -1322,9 +1321,10 @@
         \def\BKM@page{1}%
        \fi
       \fi 
-    }
+     }
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\BKM@page}
 %    \begin{macrocode}
 \let\BKM@page\@empty
@@ -1335,13 +1335,14 @@
 \def\bookmark@page{\BKM@@page}
 %    \end{macrocode}
 %    \end{macro}
-%
+% \begin{keydecl}{view}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   view.code:n = {\BKM@CheckView{#1}}
+   ,view.code:n = {\BKM@CheckView{#1}}
  }
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\BKM@view}
 %    \begin{macrocode}
 \let\BKM@view\@empty
@@ -1352,7 +1353,7 @@
 \def\bookmark@view{\BKM@view}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{BKM@CheckView}
+%    \begin{macro}[int]{\BKM@CheckView}
 %    \begin{macrocode}
 \def\BKM@CheckView#1{%
   \BKM@CheckViewType#1 \@nil
@@ -1409,7 +1410,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{BKM@CheckParam}
+%    \begin{macro}[int]{\BKM@CheckParam}
 %    \begin{macrocode}
 \def\BKM@CheckParam#1 #2\@nil#3{%
   \def\BKM@param{#1}%
@@ -1426,7 +1427,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{BKM@CheckRect}
+%    \begin{macro}[int]{\BKM@CheckRect}
 %    \begin{macrocode}
 \def\BKM@CheckRect#1#2{%
   \BKM@@CheckRect#1#2#2#2#2\@nil
@@ -1559,14 +1560,15 @@
 %
 % \subsubsection{Option \xoption{atend}}
 %
+% \begin{keydecl}{atend}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
-   atend.legacy_if_set:n = BKM@atend,
-   atend.usage:n = load
+   ,atend.legacy_if_set:n = BKM@atend
+   ,atend.usage:n = load
  }
 %    \end{macrocode}
-%
+% \end{keydecl}
 % \subsubsection{Option \xoption{style}}
 %
 %    \begin{macro}{\bookmarkdefinestyle}
@@ -1580,6 +1582,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{style}   
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
@@ -1587,6 +1590,7 @@
  }
 \newif\ifBKM@ok
 %    \end{macrocode}
+% \end{keydecl}
 %    \begin{macro}[int]{\BKM@StyleCall}
 %    \begin{macrocode}
 \def\BKM@StyleCall#1{%
@@ -1664,6 +1668,7 @@
 %
 % \subsubsection{Options for source file location}
 %
+% \begin{keydecl}{srcline,srcfile}
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
@@ -1671,7 +1676,7 @@
    ,srcfile.tl_set:N = \BKM@srcfile
  }
 %    \end{macrocode}
-%
+% \end{keydecl}
 % \subsubsection{Hook support}
 %
 %    \begin{macro}[int]{\BKM@hook}
@@ -1679,14 +1684,15 @@
 \def\BKM@hook{}
 %    \end{macrocode}
 %    \end{macro}
+% \begin{keydecl}{addtohook}    
 %    \begin{macrocode}
 \DeclareKeys[BKM]
  {
    ,addtohook.code:n = {\BKM@LocalAppendToMacro\BKM@hook{#1}}
  }
 %    \end{macrocode}
-%
-%    \begin{macro}{bookmarkget}
+% \end{keydecl}
+%    \begin{macro}{\bookmarkget}
 %    \begin{macrocode}
 \newcommand*{\bookmarkget}[1]{%
   \romannumeral0%
@@ -1709,8 +1715,8 @@
 \def\BKM@DefineDriverKey#1{%
   \DeclareKeys[BKM]
    {
-      #1.code:n   = \def\BKM@driver{#1},
-      #1.usage:n  = load
+      ,#1.code:n   = \def\BKM@driver{#1}
+      ,#1.usage:n  = load
    }
 }
 %    \end{macrocode}
@@ -1740,7 +1746,7 @@
 %    \begin{macrocode}
 \InputIfFileExists{bookmark.cfg}{}{}
 %    \end{macrocode}
-%    \begin{macro}{\BookmarkDriverDefault}
+%    \begin{macro}[int]{\BookmarkDriverDefault}
 %    \begin{macrocode}
 \providecommand*{\BookmarkDriverDefault}{dvips}
 %    \end{macrocode}
