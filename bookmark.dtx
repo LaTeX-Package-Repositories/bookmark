@@ -67,9 +67,6 @@
 %
 %<*driver>
 \DocumentMetadata{tagging=on}
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesFile{bookmark.drv}%
-  [2026-05-21 v1.32 PDF bookmarks (HO)]%  
 \documentclass{l3in2edoc}
 
 \DeclareDocElement[printtype=\textit{key},idxtype=key,idxgroup=Keys]{Key}{keydecl}
@@ -3092,80 +3089,18 @@
 % the different directories in your installation TDS tree
 % (also known as \xfile{texmf} tree):
 % \begin{quote}
-% \def\t{^^A
 % \begin{tabular}{@{}>{\ttfamily}l@{ $\rightarrow$ }>{\ttfamily}l@{}}
 %   bookmark.sty & tex/latex/bookmark/bookmark.sty\\
-%   bkm-dvipdfm.def & tex/latex/bookmark/bkm-dvipdfm.def\\
+%   bkm-dvipdfmx.def & tex/latex/bookmark/bkm-dvipdfmx.def\\
 %   bkm-dvips.def & tex/latex/bookmark/bkm-dvips.def\\
 %   bkm-pdftex.def & tex/latex/bookmark/bkm-pdftex.def\\
+%   bkm-luatex.def & tex/latex/bookmark/bkm-luatex.def\\
+%   bkm-xetex.def & tex/latex/bookmark/bkm-xetex.def\\   
 %   bkm-vtex.def & tex/latex/bookmark/bkm-vtex.def\\
-%   bkm-dvipdfm-2019-12-03.def & tex/latex/bookmark/bkm-dvipdfm-2019-12-03.def\\
-%   bkm-dvips-2019-12-03.def & tex/latex/bookmark/bkm-dvips-2019-12-03.def\\
-%   bkm-pdftex-2019-12-03.def & tex/latex/bookmark/bkm-pdftex-2019-12-03.def\\
-%   bkm-vtex-2019-12-03.def & tex/latex/bookmark/bkm-vtex-2019-12-03.def\\
 %   bookmark.pdf & doc/latex/bookmark/bookmark.pdf\\
 %   bookmark-example.tex & doc/latex/bookmark/bookmark-example.tex\\
 %   bookmark.dtx & source/latex/bookmark/bookmark.dtx\\
-% \end{tabular}^^A
-% }^^A
-% \sbox0{\t}^^A
-% \ifdim\wd0>\linewidth
-%   \begingroup
-%     \advance\linewidth by\leftmargin
-%     \advance\linewidth by\rightmargin
-%   \edef\x{\endgroup
-%     \def\noexpand\lw{\the\linewidth}^^A
-%   }\x
-%   \def\lwbox{^^A
-%     \leavevmode
-%     \hbox to \linewidth{^^A
-%       \kern-\leftmargin\relax
-%       \hss
-%       \usebox0
-%       \hss
-%       \kern-\rightmargin\relax
-%     }^^A
-%   }^^A
-%   \ifdim\wd0>\lw
-%     \sbox0{\small\t}^^A
-%     \ifdim\wd0>\linewidth
-%       \ifdim\wd0>\lw
-%         \sbox0{\footnotesize\t}^^A
-%         \ifdim\wd0>\linewidth
-%           \ifdim\wd0>\lw
-%             \sbox0{\scriptsize\t}^^A
-%             \ifdim\wd0>\linewidth
-%               \ifdim\wd0>\lw
-%                 \sbox0{\tiny\t}^^A
-%                 \ifdim\wd0>\linewidth
-%                   \lwbox
-%                 \else
-%                   \usebox0
-%                 \fi
-%               \else
-%                 \lwbox
-%               \fi
-%             \else
-%               \usebox0
-%             \fi
-%           \else
-%             \lwbox
-%           \fi
-%         \else
-%           \usebox0
-%         \fi
-%       \else
-%         \lwbox
-%       \fi
-%     \else
-%       \usebox0
-%     \fi
-%   \else
-%     \lwbox
-%   \fi
-% \else
-%   \usebox0
-% \fi
+% \end{tabular}
 % \end{quote}
 % If you have a \xfile{docstrip.cfg} that configures and enables \docstrip's
 % TDS installing feature, then some files can already be in the right
@@ -3180,36 +3115,30 @@
 %
 % \paragraph{Generating the documentation.}
 % You can use the \xfile{.dtx} to generate
-% the documentation. The process can be configured by the
-% configuration file \xfile{ltxdoc.cfg}. For instance, put this
-% line into this file, if you want to have A4 as paper format:
-% \begin{quote}
-%   \verb|\PassOptionsToClass{a4paper}{article}|
-% \end{quote}
-% An example follows how to generate the
-% documentation with pdf\LaTeX:
+% the documentation. As the documentation is now tagged, 
+% lua\LaTeX\ should be used and a current \TeX-system is required.
 % \begin{quote}
 %\begin{verbatim}
-% pdflatex bookmark.dtx
+% lualatex bookmark.dtx
 % makeindex -s gind.ist bookmark.idx
-% pdflatex bookmark.dtx
-% makeindex -s gind.ist bookmark.idx
-% pdflatex bookmark.dtx
+% lualatex bookmark.dtx
+% lualatex bookmark.dtx
+% lualatex bookmark.dtx
 %\end{verbatim}
 % \end{quote}
 %
 % \begin{thebibliography}{9}
 %
 % \bibitem{hyperref}
-%   Sebastian Rahtz, Heiko Oberdiek:
+%   Sebastian Rahtz, Heiko Oberdiek, The \LaTeX\ project:
 %   \textit{The \xpackage{hyperref} package};
-%   2011/04/17 v6.82g;
+%   2026-04-24 v7.01q;
 %   \CTANpkg{hyperref}
 %
 % \bibitem{currfile}
 %   Martin Scharrer:
 %   \textit{The \xpackage{currfile} package};
-%   2011/01/09 v0.4.
+%   2024/03/14 v1.0.
 %   \CTANpkg{currfile}
 %
 % \end{thebibliography}
