@@ -685,9 +685,96 @@
 % }
 %
 % \section{Implementation}
-% \ExplSyntaxOn
-% \tl_gset:Nn \g__codedoc_module_name_tl{BKM}
-% \ExplSyntaxOff
+% \DoNotIndex{%
+%  \def,
+%  \fi,
+%  \",
+%  \),
+%  \(,
+%  \|,
+%  \0,
+%  \1,
+%  \2,
+%  \3,
+%  \AddToHook,
+%  \addcontentsline,
+%  \advance,
+%  \AtBeginDocument,
+%  \begin,
+%  \calc,
+%  \catcode,
+%  \chapter,
+%  \cs_generate_variant:Nn,
+%  \cs_new_protected:Npn,
+%  \cs_set_eq:NN,
+%  \color_set:nn,
+%  \color_set:nnn,
+%  \color_export:nnN,
+%  \csname,
+%  \currfile,
+%  \currfilepath,
+%  \dimexpr,
+%  \DeclareKeys,
+%  \directlua,
+%  \divide,
+%  \documentclass,
+%  \edef,
+%  \else,
+%  \end,
+%  \endcsname,
+%  \endgroup,
+%  \expandafter,
+%  \ExplSyntaxOn,
+%  \ExplSyntaxOff,
+%  \global,
+%  \hbox,
+%  \headheight,
+%  \headsep,
+%  \ifcase,
+%  \ifdim,
+%  \iffalse,
+%  \ifnum,
+%  \iftrue,
+%  \ifvtex,
+%  \ifvtexpdf,
+%  \ifx,
+%  \immediate,
+%  \InputIfFileExists,
+%  \inputlineno,
+%  \jobname,
+%  \keys_define:nn,
+%  \let,
+%  \long,
+%  \MessageBreak,
+%  \NeedsTeXFormat,
+%  \newcount,
+%  \newif,
+%  \newpage,
+%  \noexpand,
+%  \nofiles,
+%  \number,
+%  \numexpr,
+%  \openout,
+%  \or,
+%  \PackageError,
+%  \PackageInfo,
+%  \PackageWarning,
+%  \PackageWarningNoLine,
+%  \paperheight,
+%  \part,
+%  \PassOptionsToPackage,
+%  \pdfextension,
+%  \ProcessKeyOptions,
+%  \providecommand,
+%  \ProvidesFile,
+%  \ProvidesPackage,
+%  \relax,
+%  \renewcommand,
+%  \RequirePackage,
+%  \romannumeral,
+%  \section,
+%  \setbox
+%  }
 % \subsection{Package}
 %
 %    \begin{macrocode}
@@ -1098,21 +1185,21 @@
 %
 % \paragraph{Redefinitions \xpackage{hyperref}'s options}
 %
-%    \begin{macro}[int]{\BKM@PatchHyperrefOption}
+%    \begin{macro}{\BKM@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@PatchHyperrefOption#1{%
   \expandafter\BKM@@PatchHyperrefOption\csname KV@Hyp@#1\endcsname%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@@PatchHyperrefOption}
+%    \begin{macro}{\BKM@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@PatchHyperrefOption#1{%
   \expandafter\BKM@@@PatchHyperrefOption#1{##1}\BKM@nil#1%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@@@PatchHyperrefOption}
+%    \begin{macro}{\BKM@@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@@PatchHyperrefOption#1\BKM@nil#2#3{%
   \def#2##1{%
@@ -1323,7 +1410,7 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\BKM@page}
+%    \begin{macro}{\BKM@page}
 %    \begin{macrocode}
 \let\BKM@page\@empty
 %    \end{macrocode}
@@ -1408,7 +1495,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@CheckParam}
+%    \begin{macro}{\BKM@CheckParam}
 %    \begin{macrocode}
 \def\BKM@CheckParam#1 #2\@nil#3{%
   \def\BKM@param{#1}%
@@ -1432,7 +1519,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@@CheckRect}
+%    \begin{macro}{\BKM@@CheckRect}
 %    \begin{macrocode}
 \def\BKM@@CheckRect#1 #2 #3 #4 #5\@nil{%
   \def\BKM@temp{0}%
@@ -1474,7 +1561,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@CheckXYZ}
+%    \begin{macro}{\BKM@CheckXYZ}
 %    \begin{macrocode}
 \def\BKM@CheckXYZ#1#2{%
   \BKM@@CheckXYZ#1#2#2#2\@nil
