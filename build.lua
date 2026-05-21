@@ -24,7 +24,9 @@ specialformats["latex"] = specialformats["latex"] or
 
 typesetexe = "lualatex-dev"
 typesetruns = 4
-function docinit_hook() return cp("bookmark.sty", unpackdir, typesetdir) end
+function docinit_hook() 
+cp("bkm-luatex.def", unpackdir, typesetdir)
+return cp("bookmark.sty", unpackdir, typesetdir) end
 
 
 tdslocations={
