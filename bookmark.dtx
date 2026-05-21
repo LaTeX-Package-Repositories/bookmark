@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %
 % File: bookmark.dtx
-% Version: 2023-12-10 v1.31
+% Version: 2026-05-21 v1.32
 % Info: PDF bookmarks
 %
 % Copyright (C)
@@ -69,7 +69,7 @@
 \DocumentMetadata{tagging=on}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bookmark.drv}%
-  [2023-12-10 v1.31 PDF bookmarks (HO)]%  
+  [2026-05-21 v1.32 PDF bookmarks (HO)]%  
 \documentclass{l3in2edoc}
 
 \DeclareDocElement[printtype=\textit{key},idxtype=key,idxgroup=Keys]{Key}{keydecl}
@@ -112,7 +112,7 @@
 %
 %
 % \title{The \xpackage{bookmark} package}
-% \date{2023-12-10 v1.31}
+% \date{2026-05-21 v1.32}
 % \author{Heiko Oberdiek\thanks
 % {Please report any issues at \url{https://github.com/ho-tex/bookmark/issues}}}
 %
@@ -697,7 +697,7 @@
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bookmark}%
-  [2023-12-10 v1.31 PDF bookmarks (HO)]%
+  [2026-05-21 v1.32 PDF bookmarks (HO)]%
 %    \end{macrocode}
 %
 % \subsubsection{Requirements}
@@ -1877,14 +1877,14 @@
 %<*dvipdfmx>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-dvipdfmx.def}%
-  [2023-12-10 v1.31 bookmark driver for dvipdfm (HO)]%
+  [2026-05-21 v1.32 bookmark driver for dvipdfm (HO)]%
 %</dvipdfmx>  
 %    \end{macrocode}
 %    \begin{macrocode}
 %<*xetex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-xetex.def}%
-  [2023-12-10 v1.31 bookmark driver for xetex (HO)]%
+  [2026-05-21 v1.32 bookmark driver for xetex (HO)]%
 %</xetex>  
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -2079,7 +2079,7 @@
 %<*vtex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-vtex.def}%
-  [2023-12-10 v1.31 bookmark driver for VTeX (HO)]%
+  [2026-05-21 v1.32 bookmark driver for VTeX (HO)]%
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -2410,14 +2410,14 @@
 %<*pdftex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-pdftex.def}%
-  [2023-12-10 v1.31 bookmark driver for pdfTeX (HO)]%
+  [2026-05-21 v1.32 bookmark driver for pdfTeX (HO)]%
 %</pdftex>  
 %    \end{macrocode}
 %    \begin{macrocode}
 %<*luatex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-luatex.def}%
-  [2023-12-10 v1.31 bookmark driver for luaTeX (HO)]%
+  [2026-05-21 v1.32 bookmark driver for luaTeX (HO)]%
 %</luatex>  
 %    \end{macrocode}
 %
@@ -2598,7 +2598,7 @@
 %<*dvips>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-dvips.def}%
-  [2023-12-10 v1.31 bookmark driver for dvips (HO)]%
+  [2026-05-21 v1.32 bookmark driver for dvips (HO)]%
 %    \end{macrocode}
 %    \begin{macro}[int]{\BKM@PSHeaderFile}
 %    \begin{macrocode}
@@ -3444,6 +3444,13 @@
 %    https://github.com/ho-tex/bookmark/issues/7
 %   \item Removed the now outdated frozen drivers. 
 %   \item Removed the dependency to ltxcmds. 
+%   \end{Version}
+%   \begin{Version}{2026-05-21 v1.32}
+%   \item Driver options are now obsolete. The backend is detected automatically.
+%   \item Driver files have been renamed to follow the LaTeX kernel.
+%   \item The package uses now the LaTeX key-value system for the options to avoid
+%   option clash errors.
+%   \item The documentation is now tagged.
 %   \end{Version}
 % \end{History}
 %

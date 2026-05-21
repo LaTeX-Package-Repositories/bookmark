@@ -1,6 +1,6 @@
 # bookmark package for LaTeX
 
-Version: 2023-12-10 v1.31
+Version: 2026-05-21 v1.32
 
 
 This package implements a new bookmark (outline) organization for
@@ -13,7 +13,7 @@ Package hyperref uses two runs.
 
 ## Copyright (C)
 * 2007, 2009-2011  Heiko Oberdiek
-* 2016-2023        Oberdiek Package Support Group
+* 2016-2026        Oberdiek Package Support Group
 
 ## License
 LATEX Project Public License, version 1.3c or later.
