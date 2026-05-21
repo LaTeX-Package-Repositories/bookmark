@@ -2426,7 +2426,7 @@
 %    \begin{macrocode}
 \def\BKM@DO@entry#1#2{%
   \begingroup
-    \kvsetkeys{BKM@DO}{#1}%
+    \SetKeys[BKM@DO]{#1}%
     \def\BKM@DO@title{#2}%
     \ifx\BKM@DO@srcfile\@empty
     \else
@@ -2664,7 +2664,7 @@
 %    \begin{macrocode}
 \def\BKM@DO@entry#1#2{%
   \begingroup
-    \kvsetkeys{BKM@DO}{#1}%
+    \SetKeys[BKM@DO]{#1}%
     \ifx\BKM@DO@srcfile\@empty
     \else
       \BKM@UnescapeHex\BKM@DO@srcfile
@@ -2953,20 +2953,23 @@
 % \subsubsection{Read auxiliary data}
 %
 %    \begin{macrocode}
-\SetupKeyvalOptions{family=BKM@DO,prefix=BKM@DO@}
-\DeclareStringOption[0]{id}
-\DeclareBoolOption{open}
-\DeclareStringOption{flags}
-\DeclareStringOption{color}
-\DeclareStringOption{dest}
-\DeclareStringOption{named}
-\DeclareStringOption{uri}
-\DeclareStringOption{gotor}
-\DeclareStringOption{page}
-\DeclareStringOption{view}
-\DeclareStringOption{rawaction}
-\DeclareStringOption{srcline}
-\DeclareStringOption{srcfile}
+\DeclareKeys[BKM@DO]
+ {
+  ,id   .tl_set:N=\BKM@DO@id
+  ,id   .initial:n = 0
+  ,open .legacy_if_set:n = BKM@DO@open
+  ,flags.tl_set:N=\BKM@DO@flags
+  ,color.tl_set:N=\BKM@DO@color
+  ,dest .tl_set:N=\BKM@DO@dest
+  ,named.tl_set:N=\BKM@DO@named
+  ,uri  .tl_set:N=\BKM@DO@uri
+  ,gotor.tl_set:N=\BKM@DO@gotor
+  ,page .tl_set:N=\BKM@DO@page
+  ,view .tl_set:N=\BKM@DO@view
+  ,rawaction.tl_set:N=\BKM@DO@rawaction
+  ,srcline.tl_set:N=\BKM@DO@srcline
+  ,srcfile.tl_set:N=\BKM@DO@srcfile
+ }
 %    \end{macrocode}
 %
 %    \begin{macrocode}
