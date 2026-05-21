@@ -30,11 +30,11 @@ function docinit_hook() return cp("bookmark.sty", unpackdir, typesetdir) end
 tdslocations={
 "doc/latex/bookmark/bookmark-example.tex",
 "tex/latex/bookmark/bookmark.sty",
-"tex/latex/bookmark/bkm-dvipdfm.def",
+"tex/latex/bookmark/bkm-dvipdfmx.def",
 "tex/latex/bookmark/bkm-dvips.def",
-"tex/latex/bookmark/bkm-dvipsone.def",
 "tex/latex/bookmark/bkm-pdftex.def",
-"tex/latex/bookmark/bkm-textures.def",
+"tex/latex/bookmark/bkm-luatex.def",
+"tex/latex/bookmark/bkm-xetex.def",
 "tex/latex/bookmark/bkm-vtex.def",
 }
 

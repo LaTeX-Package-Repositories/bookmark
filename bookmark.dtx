@@ -211,19 +211,20 @@
 %
 % \subsubsection{Driver options}
 %
-% Supported drivers are \xoption{pdftex}, \xoption{dvips},
-% \xoption{dvipdfmx} (\xoption{xetex} and older name 
-% \xoption{dvipdfm}), and \xoption{vtex}.
-% The \hologo{TeX} engines \hologo{pdfTeX}, \hologo{XeTeX},
-% and \hologo{VTeX} are automatically detected.
-% The default for the DVI drivers is \xoption{dvips}. This can
-% be changed in the configuration file \xfile{bookmark.cfg} by
-% \cs{BookmarkDriverDefault}, e.g.:
-% \begin{function}{\BookmarkDriverDefault}
-% \begin{quote}
-% |\def\BookmarkDriverDefault{dvipdfm}|
-% \end{quote}
-% \end{function}
+% The driver options are now all ignored. 
+% If \hologo{VTeX} is detected its driver file will be loaded.
+% If not the package calls the \hologo{LaTeX} command \cs{sys_ensure_backend:} 
+% to triggers is backend detection and then inspects \cs{c_sys_backend_str}. 
+% This means that for \hologo{pdfTeX}, \hologo{LuaLaTeX}, \hologo{XeTeX}
+% and \hologo{LaTeX} with \hologo{dvips} you don't need to do anything at all.
+% For \hologo{DVIPDFMx} should set the backend globally with one
+% of the following options:
+% \begin{verbatim}
+% \DocumentMetadata{backend=dvipdfmx} %if \DocumentMetadata is used
+% \RequirePackage[backend=dvipdfmx]{pdfmanagement}%if the PDF management is used
+% \documentclass[dvipdfmx]{article} % otherwise
+% \end{verbatim}
+% 
 % The current versions of the drivers use \LaTeX-hooks and test if the PDF management
 % is active and so require a format newer than 2022-06-01.
 % 
@@ -1715,8 +1716,10 @@
 \def\BKM@DefineDriverKey#1{%
   \DeclareKeys[BKM]
    {
-      ,#1.code:n   = \def\BKM@driver{#1}
-      ,#1.usage:n  = load
+    ,#1.code:n   = 
+      {\def\BKM@driver{#1}%
+      \PackageWarning{bookmark}{Option '#1' is obsolete
+        and ignored}{}}
    }
 }
 %    \end{macrocode}
@@ -1738,42 +1741,9 @@
    ,dvipdfmx-outline-open.default:n=true 
  }   
 %    \end{macrocode}
-%    \begin{macro}[int]{\bookmark@driver}
-%    \begin{macrocode}
-\def\bookmark@driver{\BKM@driver}
-%    \end{macrocode}
-%    \end{macro}
 %    \begin{macrocode}
 \InputIfFileExists{bookmark.cfg}{}{}
 %    \end{macrocode}
-%    \begin{macro}[int]{\BookmarkDriverDefault}
-%    \begin{macrocode}
-\providecommand*{\BookmarkDriverDefault}{dvips}
-%    \end{macrocode}
-%    \end{macro}
-%    \begin{macro}[int]{\BKM@driver}
-% Lua\TeX\ and pdf\TeX\ share driver.
-%    \begin{macrocode}
-\ifpdf
-  \def\BKM@driver{pdftex}%
-  \ifx\pdfoutline\@undefined
-    \ifx\pdfextension\@undefined\else
-      \protected\def\pdfoutline{\pdfextension outline }
-    \fi
-  \fi
-\else
-  \ifxetex
-    \def\BKM@driver{dvipdfm}%
-  \else
-    \ifvtex
-      \def\BKM@driver{vtex}%
-    \else
-      \edef\BKM@driver{\BookmarkDriverDefault}%
-    \fi
-  \fi
-\fi
-%    \end{macrocode}
-%    \end{macro}
 %
 % \paragraph{Process options.}
 %
@@ -1806,69 +1776,25 @@
 \fi
 %    \end{macrocode}
 %
-% \paragraph{Driver validation and loading.}
+% \paragraph{Driver loading.}
 %
 %    \begin{macrocode}
-\def\BKM@temp{dvipdfmx}%
-\ifx\BKM@temp\BKM@driver
-  \def\BKM@driver{dvipdfm}%
-\fi
-\def\BKM@temp{pdftex}%
-\ifpdf
-  \ifx\BKM@temp\BKM@driver
-  \else
-    \PackageWarningNoLine{bookmark}{%
-      Wrong driver `\BKM@driver', using `pdftex' instead%
-    }%
-    \let\BKM@driver\BKM@temp
-  \fi
+\ExplSyntaxOn
+\ifvtex
+ \def\BKM@driver{vtex}
 \else
-  \ifx\BKM@temp\BKM@driver
-    \PackageError{bookmark}{%
-      Wrong driver, pdfTeX is not running in PDF mode.\MessageBreak
-      Package loading is aborted%
-    }\@ehc
-    \expandafter\expandafter\expandafter\endinput
-  \fi
-  \def\BKM@temp{dvipdfm}%
-  \ifxetex
-    \ifx\BKM@temp\BKM@driver
-    \else
-      \PackageWarningNoLine{bookmark}{%
-        Wrong driver `\BKM@driver',\MessageBreak
-        using `dvipdfm' for XeTeX instead%
-      }%
-      \let\BKM@driver\BKM@temp
-    \fi
-  \else
-    \def\BKM@temp{vtex}%
-    \ifvtex
-      \ifx\BKM@temp\BKM@driver
-      \else
-        \PackageWarningNoLine{bookmark}{%
-          Wrong driver `\BKM@driver',\MessageBreak
-          using `vtex' for VTeX instead%
-        }%
-        \let\BKM@driver\BKM@temp
-      \fi
-    \else
-      \ifx\BKM@temp\BKM@driver
-        \PackageError{bookmark}{%
-          Wrong driver, VTeX is not running in PDF mode.\MessageBreak
-          Package loading is aborted%
-        }\@ehc
-        \expandafter\expandafter\expandafter\endinput
-      \fi
-    \fi
-  \fi
-\fi
-\InputIfFileExists{bkm-\BKM@driver.def}{}{%
-  \PackageError{bookmark}{%
-    Unsupported driver `\BKM@driver'.\MessageBreak
-    Package loading is aborted%
-  }\@ehc
-  \endinput
-}
+ \sys_ensure_backend:
+ \str_case:Nn \c_sys_backend_str
+  {
+    {pdftex}  {\def\BKM@driver{pdftex}}
+    {luatex}  {\def\BKM@driver{luatex}}
+    {xetex}   {\def\BKM@driver{xetex}}
+    {dvipdfmx}{\def\BKM@driver{dvipdfmx}}
+    {dvips}   {\def\BKM@driver{dvips}}
+  } 
+\fi 
+\ExplSyntaxOff 
+\InputIfFileExists{bkm-\BKM@driver.def}{}{}
 %    \end{macrocode}
 %
 % \subsubsection{Compatibility for \xpackage{hyperref}}
@@ -1948,12 +1874,22 @@
 % \subsection{Driver for dvipdfm}
 %
 %    \begin{macrocode}
-%<*dvipdfm>
+%<*dvipdfmx>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesFile{bkm-dvipdfm.def}%
+\ProvidesFile{bkm-dvipdfmx.def}%
   [2023-12-10 v1.31 bookmark driver for dvipdfm (HO)]%
+%</dvipdfmx>  
 %    \end{macrocode}
-%
+%    \begin{macrocode}
+%<*xetex>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{bkm-xetex.def}%
+  [2023-12-10 v1.31 bookmark driver for xetex (HO)]%
+%</xetex>  
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*dvipdfmx|xetex>
+%    \end{macrocode}
 %    \begin{macro}[int]{\BKM@id}
 %    \begin{macrocode}
 \newcount\BKM@id
@@ -2134,7 +2070,7 @@
 %    \end{macro}
 %
 %    \begin{macrocode}
-%</dvipdfm>
+%</dvipdfmx|xetex>
 %    \end{macrocode}
 %
 % \subsection{Driver for \hologo{VTeX}}
@@ -2474,7 +2410,19 @@
 %<*pdftex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-pdftex.def}%
-  [2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO)]%
+  [2023-12-10 v1.31 bookmark driver for pdfTeX (HO)]%
+%</pdftex>  
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*luatex>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{bkm-luatex.def}%
+  [2023-12-10 v1.31 bookmark driver for luaTeX (HO)]%
+%</luatex>  
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<*pdftex|luatex>
 %    \end{macrocode}
 %
 %    \begin{macro}[int]{\BKM@DO@entry}
@@ -2573,7 +2521,8 @@
         }%
       }%
     \fi
-    \pdfoutline\BKM@attr\BKM@action
+%<pdftex>    \pdfoutline\BKM@attr\BKM@action
+%<luatex>    \pdfextension outline\BKM@attr\BKM@action
                 count\ifBKM@DO@open\else-\fi\BKM@x@childs
                 {\BKM@DO@title}%
   \endgroup
@@ -2608,11 +2557,11 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-%</pdftex>
+%</pdftex|luatex>
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-%<*pdftex|pdfmark>
+%<*pdftex|luatex|pdfmark>
 %    \end{macrocode}
 %    \begin{macro}[int]{\BKM@SourceLocation}
 %    \begin{macrocode}
@@ -2636,7 +2585,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %    \begin{macrocode}
-%</pdftex|pdfmark>
+%</pdftex|luatex|pdfmark>
 %    \end{macrocode}
 %
 % \subsection{Drivers with pdfmark specials}
@@ -2845,7 +2794,7 @@
 % \subsection{Common part for \xoption{pdftex} and \xoption{pdfmark}}
 %
 %    \begin{macrocode}
-%<*pdftex|pdfmark>
+%<*pdftex|luatex|pdfmark>
 %    \end{macrocode}
 %
 % \subsubsection{Write auxiliary file}
@@ -2985,24 +2934,22 @@
 %    \end{macro}
 %    \begin{macro}[int]{\BKM@LuaTeX@InitFile}
 %    \begin{macrocode}
-\ifluatex
-    \def\BKM@LuaTeX@InitFile{%
-      \begingroup
-        \toks@={}%
-      \edef\x{\endgroup
-        \def\noexpand\BKM@srcfile{%
-          \the\expandafter\toks@
-          \directlua{%
-             if status and status.filename then %
-               tex.settoks('toks@', status.filename)%
-             end%
-          }%
-        }%
-      }\x
-    }%
-\else
-  \let\BKM@LuaTeX@InitFile\relax
-\fi
+%<luatex>\def\BKM@LuaTeX@InitFile{%
+%<luatex>  \begingroup
+%<luatex>    \toks@={}%
+%<luatex>  \edef\x{\endgroup
+%<luatex>    \def\noexpand\BKM@srcfile{%
+%<luatex>      \the\expandafter\toks@
+%<luatex>      \directlua{%
+%<luatex>         if status and status.filename then %
+%<luatex>           tex.settoks('toks@', status.filename)%
+%<luatex>         end%
+%<luatex>      }%
+%<luatex>    }%
+%<luatex>  }\x
+%<luatex>}%
+%<pdftex|pdfmark>\let\BKM@LuaTeX@InitFile\relax
+
 %    \end{macrocode}
 %    \end{macro}
 %
@@ -3032,7 +2979,7 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-%</pdftex|pdfmark>
+%</pdftex|luatex|pdfmark>
 %    \end{macrocode}
 %
 % \subsection{Option \xoption{atend}}
@@ -3088,13 +3035,13 @@
 %      be used after the last page.
 %    \end{itemize}
 %    \begin{macrocode}
-%<*pdftex>
+%<*pdftex|luatex>
 \ifBKM@atend
   \AddToHook{enddocument/afterlastpage}{%
     \BKM@EndHook
   }%
 \fi
-%</pdftex>
+%</pdftex|luatex>
 %    \end{macrocode}
 %
 % \subsubsection{Drivers using \xoption{shipout/lastpage}}
@@ -3110,11 +3057,11 @@
 %    for the bookmarks. The file writing has been moved to the
 %    the last shipout page too to avoid conflicts with pgf.
 %    \begin{macrocode}
-%<*dvipdfm|vtex|pdfmark>
+%<*dvipdfmx|xetex|vtex|pdfmark>
 \ifBKM@atend
   \AddToHook{shipout/lastpage}{\BKM@EndHook}%
 \fi
-%</dvipdfm|vtex|pdfmark>
+%</dvipdfmx|xetex|vtex|pdfmark>
 %    \end{macrocode}
 %
 % \section{Installation}

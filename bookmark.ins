@@ -33,7 +33,8 @@
  This work consists of the main source files bookmark.dtx, 
  and bookmark.ins and the derived files
     bookmark.sty, bookmark.pdf, 
-    bkm-dvipdfm.def, bkm-dvips.def, bkm-pdftex.def, bkm-vtex.def,
+    bkm-dvipdfmx.def, bkm-dvips.def, bkm-pdftex.def, bkm-luatex.def,
+    bkm-xetex.def, bkm-vtex.def,
     bookmark-example.tex.
 % 
 \fi
@@ -82,7 +83,8 @@ This file is part of the "bookmark bundle" (The Work in LPPL)
  This work consists of the main source files bookmark.dtx
  and bookmark.ins and the derived files
     bookmark.sty, bookmark.pdf, 
-    bkm-dvipdfm.def, bkm-dvips.def, bkm-pdftex.def, bkm-vtex.def,
+    bkm-dvipdfmx.def, bkm-dvips.def, bkm-pdftex.def, bkm-luatex.def,
+    bkm-xetex.def, bkm-vtex.def,
     bookmark-example.tex.
 
 \endpreamble
@@ -91,9 +93,11 @@ This file is part of the "bookmark bundle" (The Work in LPPL)
 \generate{%
   \usedir{tex/latex/bookmark}%
   \file{bookmark.sty}{\from{bookmark.dtx}{package}}%
-  \file{bkm-dvipdfm.def}{\from{bookmark.dtx}{dvipdfm}}%
+  \file{bkm-dvipdfmx.def}{\from{bookmark.dtx}{dvipdfmx}}%
   \file{bkm-dvips.def}{\from{bookmark.dtx}{dvips,pdfmark}}%
   \file{bkm-pdftex.def}{\from{bookmark.dtx}{pdftex}}%
+  \file{bkm-luatex.def}{\from{bookmark.dtx}{luatex}}%
+  \file{bkm-xetex.def}{\from{bookmark.dtx}{xetex}}%
   \file{bkm-vtex.def}{\from{bookmark.dtx}{vtex}}%
   \usedir{doc/latex/bookmark}%
   \file{bookmark-example.tex}{\from{bookmark.dtx}{example}}%
@@ -106,8 +110,8 @@ This file is part of the "bookmark bundle" (The Work in LPPL)
 \Msg{* To finish the installation you have to move the following}
 \Msg{* files into a directory searched by TeX:}
 \Msg{*}
-\Msg{*     bookmark.sty, bkm-dvipdfm.def, bkm-dvips.def,}
-\Msg{*     bkm-pdftex.def and bkm-vtex.def}
+\Msg{*     bookmark.sty, bkm-dvipdfmx.def, bkm-dvips.def,}
+\Msg{*     bkm-pdftex.def, bkm-luatex.def, bkm-xetex.def and bkm-vtex.def}
 \Msg{*}
 \Msg{* To produce the documentation run the file `bookmark.dtx'}
 \Msg{* through LaTeX.}
