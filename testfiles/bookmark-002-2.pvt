@@ -29,7 +29,6 @@ Page 1
 
 \bookmarksetup{depth=1}
 
-\AssignSocketPlug{hyp/outline/title}{pdfstringdef}
 \section{blub $a=\int$ \texorpdfstring{tex}{pdf 🦆}}
 
 
