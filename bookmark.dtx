@@ -70,8 +70,10 @@
 \documentclass{l3in2edoc}
 
 \DeclareDocElement[printtype=\textit{key},idxtype=key,idxgroup=Keys]{Key}{keydecl}
+% they should be robust:
+% 
 \NewDocumentCommand\xoption{m}{\textsf{#1\DescribeKey[noprint]{#1}}}
-
+\RenewDocumentCommand\hook{m}{\texttt{#1\DescribeHook[noprint]{#1}}}
 \newcommand*{\xpackage}[1]{\textsf{#1}}
 \newcommand*{\xmodule}[1]{\textsf{#1}}
 \newcommand*{\xclass}[1]{\textsf{#1}}
@@ -717,6 +719,7 @@
 %  \1,
 %  \2,
 %  \3,
+%  \number
 %  }
 % \subsection{Package}
 %
@@ -731,7 +734,7 @@
 %
 % \paragraph{\hologo{eTeX}.}
 %
-%    \begin{macro}[int]{\BKM@CalcExpr}
+%    \begin{macro}[module=BKM]{\BKM@CalcExpr}
 %    \begin{macrocode}
 \begingroup\expandafter\expandafter\expandafter\endgroup
 \expandafter\ifx\csname numexpr\endcsname\relax
@@ -756,7 +759,7 @@
 %
 % \paragraph{Escape features of \hologo{pdfTeX}.}
 %
-%    \begin{macro}[int]{\BKM@EscapeName}
+%    \begin{macro}[module=BKM]{\BKM@EscapeName}
 %    \begin{macrocode}
 \def\BKM@EscapeName#1{%
   \ifx#1\@empty
@@ -766,7 +769,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@EscapeString}
+%    \begin{macro}[module=BKM]{\BKM@EscapeString}
 %    \begin{macrocode}
 \def\BKM@EscapeString#1{%
   \ifx#1\@empty
@@ -776,7 +779,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@EscapeHex}
+%    \begin{macro}[module=BKM]{\BKM@EscapeHex}
 %    \begin{macrocode}
 \def\BKM@EscapeHex#1{%
   \ifx#1\@empty
@@ -786,7 +789,7 @@
 }%
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@UnescapeHex}
+%    \begin{macro}[module=BKM]{\BKM@UnescapeHex}
 %    \begin{macrocode}
 \def\BKM@UnescapeHex#1{%
   \EdefUnescapeHex#1#1%
@@ -797,10 +800,10 @@
 % \paragraph{Some helper commands}
 % Replaces some commands from ltxcmds:
 % 
-% \begin{macro}[int]{\BKM@ReturnAfterFi}
-% \begin{macro}[int]{\BKM@space}
-% \begin{macro}[int]{\BKM@GlobalAppendToMacro}
-% \begin{macro}[int]{\BKM@LocalAppendToMacro}
+% \begin{macro}[module=BKM]{\BKM@ReturnAfterFi}
+% \begin{macro}[module=BKM]{\BKM@space}
+% \begin{macro}[module=BKM]{\BKM@GlobalAppendToMacro}
+% \begin{macro}[module=BKM]{\BKM@LocalAppendToMacro}
 %    \begin{macrocode}
 \ExplSyntaxOn
 \let\BKM@LocalAppendToMacro\tl_put_right:Nn
@@ -855,7 +858,7 @@
 \newcommand*{\bookmarksetup}{\SetKeys[BKM]}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@setup}
+%    \begin{macro}[module=BKM]{\BKM@setup}
 %    \begin{macrocode}
 \def\BKM@setup#1{%
   \bookmarksetup{#1}%
@@ -880,14 +883,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@HookNextClear}
+%    \begin{macro}[module=BKM]{\BKM@HookNextClear}
 %    \begin{macrocode}
 \def\BKM@HookNextClear{%
   \global\let\BKM@HookNext\@empty
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@HookNext}
+%    \begin{macro}[module=BKM]{\BKM@HookNext}
 %    \begin{macrocode}
 \BKM@HookNextClear
 %    \end{macrocode}
@@ -914,7 +917,7 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\bookmark@open}
+%    \begin{macro}[module=BKM]{\bookmark@open}
 %    \begin{macrocode}
 \def\bookmark@open{%
   \ifBKM@open\@ne\else\z@\fi
@@ -932,7 +935,7 @@
 % \end{keydecl}
 % 
 
-% \begin{macro}[int]{\BKM@depth}
+% \begin{macro}[module=BKM]{\BKM@depth}
 %    \begin{macrocode}
 \@ifundefined{Hy@bookmarksdepth}{%
   \def\BKM@depth{\c@tocdepth}%
@@ -979,13 +982,13 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\bookmark@depth}
+%    \begin{macro}[module=BKM]{\bookmark@depth}
 %    \begin{macrocode}
 \def\bookmark@depth{\BKM@depth}
 %    \end{macrocode}
 %    \end{macro}
 %    
-%    \begin{macro}[int]{\BKM@SetDepthOrLevel}
+%    \begin{macro}[module=BKM]{\BKM@SetDepthOrLevel}
 %    \begin{macrocode}
 \def\BKM@SetDepthOrLevel#1#2{%
   \begingroup
@@ -999,7 +1002,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %    
-% \begin{macro}[int]{\BKM@set@level}
+% \begin{macro}[module=BKM]{\BKM@set@level}
 %    \begin{macrocode}
 \newcommand\BKM@set@level[1]{%
   \edef\BKM@param{#1}%
@@ -1033,7 +1036,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}[int]{\BKM@level}
+% \begin{macro}[module=BKM]{\BKM@level}
 %    \begin{macrocode}
 \def\BKM@level{\BKM@currentlevel}
 %    \end{macrocode}
@@ -1047,7 +1050,7 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\BKM@MacroCurrentLevel}
+%    \begin{macro}[module=BKM]{\BKM@MacroCurrentLevel}
 %    \begin{macrocode}
 \def\BKM@MacroCurrentLevel{\BKM@currentlevel}
 %    \end{macrocode}
@@ -1061,7 +1064,7 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\BKM@startatrootfalse}
+%    \begin{macro}[module=BKM]{\BKM@startatrootfalse}
 %    \begin{macrocode}
 \def\BKM@startatrootfalse{%
   \global\let\ifBKM@startatroot\iffalse
@@ -1069,7 +1072,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %    
-%    \begin{macro}[int]{\BKM@startatroottrue}
+%    \begin{macro}[module=BKM]{\BKM@startatroottrue}
 %    \begin{macrocode}
 \def\BKM@startatroottrue{%
   \global\let\ifBKM@startatroot\iftrue
@@ -1084,12 +1087,12 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\bookmark@level}
+%    \begin{macro}[module=BKM]{\bookmark@level}
 %    \begin{macrocode}
 \def\bookmark@level{\BKM@level}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@currentlevel}
+%    \begin{macro}[module=BKM]{\BKM@currentlevel}
 %    \begin{macrocode}
 \def\BKM@currentlevel{0}
 %    \end{macrocode}
@@ -1118,7 +1121,7 @@
 %    \end{macrocode}
 % \end{keydecl}
 %
-%    \begin{macro}[int]{\bookmark@numbered}
+%    \begin{macro}[module=BKM]{\bookmark@numbered}
 %    \begin{macrocode}
 \def\bookmark@numbered{%
   \ifBKM@numbered\@ne\else\z@\fi
@@ -1128,21 +1131,21 @@
 %
 % \paragraph{Redefinitions \xpackage{hyperref}'s options}
 %
-%    \begin{macro}{\BKM@PatchHyperrefOption}
+%    \begin{macro}[module=BKM]{\BKM@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@PatchHyperrefOption#1{%
   \expandafter\BKM@@PatchHyperrefOption\csname KV@Hyp@#1\endcsname%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@PatchHyperrefOption}
+%    \begin{macro}[module=BKM]{\BKM@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@PatchHyperrefOption#1{%
   \expandafter\BKM@@@PatchHyperrefOption#1{##1}\BKM@nil#1%
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@@PatchHyperrefOption}
+%    \begin{macro}[module=BKM]{\BKM@@@PatchHyperrefOption}
 %    \begin{macrocode}
 \def\BKM@@@PatchHyperrefOption#1\BKM@nil#2#3{%
   \def#2##1{%
@@ -1188,21 +1191,21 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\bookmark@italic}
+%    \begin{macro}[module=BKM]{\bookmark@italic}
 %    \begin{macrocode}
 \def\bookmark@italic{%
   \ifnum\bitsetGet{BKM@FontStyle}{0}=1 \@ne\else\z@\fi
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@bold}
+%    \begin{macro}[module=BKM]{\bookmark@bold}
 %    \begin{macrocode}
 \def\bookmark@bold{%
   \ifnum\bitsetGet{BKM@FontStyle}{1}=1 \@ne\else\z@\fi
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@PrintStyle}
+%    \begin{macro}[module=BKM]{\BKM@PrintStyle}
 %    \begin{macrocode}
 \def\BKM@PrintStyle{%
   \bitsetGetDec{BKM@FontStyle}%
@@ -1215,7 +1218,7 @@
 % If the PDF management is loaded we make use of l3color commands for color expressions,
 % without it they only work if \xpackage{xcolor} has been loaded.
 % 
-%  \begin{macro}[int]{\__BKM_color_set:nn,\__BKM_color_set_aux:nwn}
+%  \begin{macro}[module=BKM]{\__BKM_color_set:nn,\__BKM_color_set_aux:nwn}
 %   Color keys need to parse color expressions. Two input types are supported:
 %  |color=[rgb]{1,0,.5}| and |color=red!50!blue|.
 %    \begin{macrocode}
@@ -1283,12 +1286,12 @@
 %    \end{macrocode}
 % \end{keydecl}
 % 
-%    \begin{macro}[int]{\BKM@color}
+%    \begin{macro}[module=BKM]{\BKM@color}
 %    \begin{macrocode}
 \let\BKM@color\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@color}
+%    \begin{macro}[module=BKM]{\bookmark@color}
 %    \begin{macrocode}
 \def\bookmark@color{\BKM@color}
 %    \end{macrocode}
@@ -1307,27 +1310,27 @@
 }
 \ExplSyntaxOff
 %    \end{macrocode}
-%    \begin{macro}[int]{\bookmark@dest}
+%    \begin{macro}[module=BKM]{\bookmark@dest}
 %    \begin{macrocode}
 \BKM@temp{dest}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@named}
+%    \begin{macro}[module=BKM]{\bookmark@named}
 %    \begin{macrocode}
 \BKM@temp{named}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@uri}
+%    \begin{macro}[module=BKM]{\bookmark@uri}
 %    \begin{macrocode}
 \BKM@temp{uri}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@gotor}
+%    \begin{macro}[module=BKM]{\bookmark@gotor}
 %    \begin{macrocode}
 \BKM@temp{gotor}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@rawaction}
+%    \begin{macro}[module=BKM]{\bookmark@rawaction}
 %    \begin{macrocode}
 \BKM@temp{rawaction}
 %    \end{macrocode}
@@ -1353,12 +1356,12 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}{\BKM@page}
+%    \begin{macro}[module=BKM]{\BKM@page}
 %    \begin{macrocode}
 \let\BKM@page\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@page}
+%    \begin{macro}[module=BKM]{\bookmark@page}
 %    \begin{macrocode}
 \def\bookmark@page{\BKM@@page}
 %    \end{macrocode}
@@ -1371,24 +1374,24 @@
  }
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\BKM@view}
+%    \begin{macro}[module=BKM]{\BKM@view}
 %    \begin{macrocode}
 \let\BKM@view\@empty
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\bookmark@view}
+%    \begin{macro}[module=BKM]{\bookmark@view}
 %    \begin{macrocode}
 \def\bookmark@view{\BKM@view}
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@CheckView}
+%    \begin{macro}[module=BKM]{\BKM@CheckView}
 %    \begin{macrocode}
 \def\BKM@CheckView#1{%
   \BKM@CheckViewType#1 \@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@CheckViewType}
+%    \begin{macro}[module=BKM]{\BKM@CheckViewType}
 %    \begin{macrocode}
 \def\BKM@CheckViewType#1 #2\@nil{%
   \def\BKM@type{#1}%
@@ -1424,7 +1427,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@TestViewType}
+%    \begin{macro}[module=BKM]{\BKM@TestViewType}
 %    \begin{macrocode}
 \def\BKM@TestViewType#1{%
   \def\BKM@temp{#1}%
@@ -1438,7 +1441,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@CheckParam}
+%    \begin{macro}[module=BKM]{\BKM@CheckParam}
 %    \begin{macrocode}
 \def\BKM@CheckParam#1 #2\@nil#3{%
   \def\BKM@param{#1}%
@@ -1455,14 +1458,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@CheckRect}
+%    \begin{macro}[module=BKM]{\BKM@CheckRect}
 %    \begin{macrocode}
 \def\BKM@CheckRect#1#2{%
   \BKM@@CheckRect#1#2#2#2#2\@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@@CheckRect}
+%    \begin{macro}[module=BKM]{\BKM@@CheckRect}
 %    \begin{macrocode}
 \def\BKM@@CheckRect#1 #2 #3 #4 #5\@nil{%
   \def\BKM@temp{0}%
@@ -1504,14 +1507,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}{\BKM@CheckXYZ}
+%    \begin{macro}[module=BKM]{\BKM@CheckXYZ}
 %    \begin{macrocode}
 \def\BKM@CheckXYZ#1#2{%
   \BKM@@CheckXYZ#1#2#2#2\@nil
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@@CheckXYZ}
+%    \begin{macro}[module=BKM]{\BKM@@CheckXYZ}
 %    \begin{macrocode}
 \def\BKM@@CheckXYZ#1 #2 #3 #4\@nil{%
   \def\BKM@param{#1}%
@@ -1546,14 +1549,14 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@null}
+%    \begin{macro}[module=BKM]{\BKM@null}
 %    \begin{macrocode}
 \def\BKM@null{null}
 \@onelevel@sanitize\BKM@null
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}[int]{\BKM@CalcParam}
+%    \begin{macro}[module=BKM]{\BKM@CalcParam}
 %    \begin{macrocode}
 \def\BKM@CalcParam{%
   \begingroup
@@ -1562,7 +1565,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@@CalcParam}
+%    \begin{macro}[module=BKM]{\BKM@@CalcParam}
 %    \begin{macrocode}
 \def\BKM@@CalcParam#1#2#3\@nil{%
   \ifx\calc#1%
@@ -1619,7 +1622,7 @@
 \newif\ifBKM@ok
 %    \end{macrocode}
 % \end{keydecl}
-%    \begin{macro}[int]{\BKM@StyleCall}
+%    \begin{macro}[module=BKM]{\BKM@StyleCall}
 %    \begin{macrocode}
 \def\BKM@StyleCall#1{%
   \@ifundefined{BKM@style@#1}{%
@@ -1668,7 +1671,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@StyleStackPop}
+%    \begin{macro}[module=BKM]{\BKM@StyleStackPop}
 %    \begin{macrocode}
 \def\BKM@StyleStackPop{%
   \let\BKM@StyleEntry\relax
@@ -1678,7 +1681,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@StyleEntryCheck}
+%    \begin{macro}[module=BKM]{\BKM@StyleEntryCheck}
 %    \begin{macrocode}
 \def\BKM@StyleEntryCheck#1{%
   \def\BKM@temp{#1}%
@@ -1688,7 +1691,7 @@
 }
 %    \end{macrocode}
 %    \end{macro}
-%    \begin{macro}[int]{\BKM@StyleStack}
+%    \begin{macro}[module=BKM]{\BKM@StyleStack}
 %    \begin{macrocode}
 \def\BKM@StyleStack{}
 %    \end{macrocode}
@@ -1707,7 +1710,7 @@
 % \end{keydecl}
 % \subsubsection{Hook support}
 %
-%    \begin{macro}[int]{\BKM@hook}
+%    \begin{macro}[module=BKM]{\BKM@hook}
 %    \begin{macrocode}
 \def\BKM@hook{}
 %    \end{macrocode}
@@ -1738,7 +1741,7 @@
 %
 % \paragraph{Driver detection.}
 %
-%    \begin{macro}[int]{\BKM@DefineDriverKey}
+%    \begin{macro}[module=BKM]{\BKM@DefineDriverKey}
 %    \begin{macrocode}
 \def\BKM@DefineDriverKey#1{%
   \DeclareKeys[BKM]
@@ -1861,7 +1864,7 @@
 %    \end{macro}
 %
 %    Section number, text, label, level, file
-%    \begin{macro}[int]{\Hy@writebookmark}
+%    \begin{macro}[module=]{\Hy@writebookmark}
 %    \begin{macrocode}
 \def\Hy@writebookmark#1#2#3#4#5{%
   \ifnum#4>\BKM@depth\relax
@@ -1888,7 +1891,7 @@
 %    \end{macrocode}
 %    \end{macro}
 %
-%    \begin{macro}[int]{\ReadBookmarks}
+%    \begin{macro}[int,module=]{\ReadBookmarks}
 %    \begin{macrocode}
 \let\ReadBookmarks\relax
 %    \end{macrocode}
@@ -3054,7 +3057,7 @@
 %
 % \subsubsection{Drivers using hooks at end of document}
 %
-%    Driver \xoption{pdftex} use the LaTeX hook \xoption{enddocument/afterlastpage}
+%    Driver \xoption{pdftex} use the LaTeX hook \hook{enddocument/afterlastpage}
 %    (which is equivalent to the previously used
 %    \cs{AfterLastShipout} of \xpackage{atveryend}'s),
 %    because it still needs the \xext{aux} file. It uses
@@ -3074,14 +3077,14 @@
 %</pdftex|luatex>
 %    \end{macrocode}
 %
-% \subsubsection{Drivers using \xoption{shipout/lastpage}}
+% \subsubsection{Drivers using \hook{shipout/lastpage}}
 %
 %    The other drivers implement \cs{bookmark} using \cs{special}
 %    commands. Thus the last bookmarks must be put on the last page,
 %    not afterwards.
 %    \cs{AtEndDocument} cannot be used, because it is too late, the
 %    last page can already be output. Therefore we use the
-%    LaTeX hook \xoption{shipout/lastpage}.
+%    LaTeX hook \hook{shipout/lastpage}.
 %    At least two \hologo{LaTeX} runs are necessary.
 %    The postscript driver \xoption{dvips} use an external PostScript file
 %    for the bookmarks. The file writing has been moved to the
@@ -3142,8 +3145,8 @@
 % \subsection{Refresh file name databases}
 %
 % If your \TeX~distribution
-% (\TeX\,Live, \mikTeX, \dots) relies on file name databases, you must refresh
-% these. For example, \TeX\,Live\ users run \verb|texhash| or
+% (\hologo{TeXLive}, \hologo{MiKTeX}, \dots) relies on file name databases, you must refresh
+% these. For example, \hologo{TeXLive}\ users run \verb|texhash| or
 % \verb|mktexlsr|.
 %
 % \paragraph{Generating the documentation.}
