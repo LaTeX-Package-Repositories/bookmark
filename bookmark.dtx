@@ -100,6 +100,28 @@
 \newenvironment{History}
  {\section{History}\raggedright}{}
 
+\usepackage{etoolbox}
+% get rid of index entries from macrocode environments
+% 
+\ExplSyntaxOn\makeatletter
+\bool_new:N\l__BKM_index_macrocode_bool
+\DeclareKeys [ BKM / doc ]
+ {
+  index-macrocode .bool_set:N=\l__BKM_index_macrocode_bool,
+  index-macrocode .initial:n=true
+ }
+\patchcmd \__codedoc_special_index_aux:nnnnnn
+  {\__codedoc_index_codeline_hc:nn}
+  {
+   \bool_if:NTF\l__BKM_index_macrocode_bool
+   {\__codedoc_index_codeline_hc:nn}
+   {\use_none:nn}
+  }
+  {}
+  {\fail}
+\SetKeys[BKM/doc]{index-macrocode=false}  
+\ExplSyntaxOff\makeatother
+
 
 \begin{document}
   \DocInput{bookmark.dtx}%
@@ -686,94 +708,15 @@
 %
 % \section{Implementation}
 % \DoNotIndex{%
-%  \def,
-%  \fi,
 %  \",
-%  \),
 %  \(,
+%  \),
 %  \|,
+%  \\,
 %  \0,
 %  \1,
 %  \2,
 %  \3,
-%  \AddToHook,
-%  \addcontentsline,
-%  \advance,
-%  \AtBeginDocument,
-%  \begin,
-%  \calc,
-%  \catcode,
-%  \chapter,
-%  \cs_generate_variant:Nn,
-%  \cs_new_protected:Npn,
-%  \cs_set_eq:NN,
-%  \color_set:nn,
-%  \color_set:nnn,
-%  \color_export:nnN,
-%  \csname,
-%  \currfile,
-%  \currfilepath,
-%  \dimexpr,
-%  \DeclareKeys,
-%  \directlua,
-%  \divide,
-%  \documentclass,
-%  \edef,
-%  \else,
-%  \end,
-%  \endcsname,
-%  \endgroup,
-%  \expandafter,
-%  \ExplSyntaxOn,
-%  \ExplSyntaxOff,
-%  \global,
-%  \hbox,
-%  \headheight,
-%  \headsep,
-%  \ifcase,
-%  \ifdim,
-%  \iffalse,
-%  \ifnum,
-%  \iftrue,
-%  \ifvtex,
-%  \ifvtexpdf,
-%  \ifx,
-%  \immediate,
-%  \InputIfFileExists,
-%  \inputlineno,
-%  \jobname,
-%  \keys_define:nn,
-%  \let,
-%  \long,
-%  \MessageBreak,
-%  \NeedsTeXFormat,
-%  \newcount,
-%  \newif,
-%  \newpage,
-%  \noexpand,
-%  \nofiles,
-%  \number,
-%  \numexpr,
-%  \openout,
-%  \or,
-%  \PackageError,
-%  \PackageInfo,
-%  \PackageWarning,
-%  \PackageWarningNoLine,
-%  \paperheight,
-%  \part,
-%  \PassOptionsToPackage,
-%  \pdfextension,
-%  \ProcessKeyOptions,
-%  \providecommand,
-%  \ProvidesFile,
-%  \ProvidesPackage,
-%  \relax,
-%  \renewcommand,
-%  \RequirePackage,
-%  \romannumeral,
-%  \section,
-%  \setbox
 %  }
 % \subsection{Package}
 %
