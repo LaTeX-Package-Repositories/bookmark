@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %
 % File: bookmark.dtx
-% Version: 2026-05-21 v1.32
+% Version: 2026-10-17 v1.33
 % Info: PDF bookmarks
 %
 % Copyright (C)
@@ -134,7 +134,7 @@
 %
 %
 % \title{The \xpackage{bookmark} package}
-% \date{2026-05-21 v1.32}
+% \date{2026-10-17 v1.33}
 % \author{Heiko Oberdiek\thanks
 % {Please report any issues at \url{https://github.com/LaTeX-Package-Repositories/bookmark/issues}}}
 %
@@ -728,7 +728,7 @@
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bookmark}%
-  [2026-05-21 v1.32 PDF bookmarks (HO)]%
+  [2026-10-17 v1.33 PDF bookmarks (HO)]%
 %    \end{macrocode}
 %
 % \subsubsection{Requirements}
@@ -1834,7 +1834,7 @@
 %    \begin{macrocode}
 \let\pdfbookmark\@undefined
 \newcommand*{\pdfbookmark}[3][0]{%
-  \bookmark[level=#1,dest={#3.#1}]{#2}%
+  \bookmark[level={#1},dest={#3.#1}]{#2}%
   \hyper@anchorstart{#3.#1}\hyper@anchorend
 }
 %    \end{macrocode}
@@ -1884,7 +1884,7 @@
           \let\partnumberline\@gobble
           \let\chapternumberline\@gobble
         \fi
-        \bookmark[level=#4,dest={\HyperDestNameFilter{#3}}]{#2}%
+        \bookmark[level={#4},dest={\HyperDestNameFilter{#3}}]{#2}%
       \endgroup
     \fi
   \fi
@@ -1908,14 +1908,14 @@
 %<*dvipdfmx>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-dvipdfmx.def}%
-  [2026-05-21 v1.32 bookmark driver for dvipdfm (HO)]%
+  [2026-10-17 v1.33 bookmark driver for dvipdfm (HO)]%
 %</dvipdfmx>  
 %    \end{macrocode}
 %    \begin{macrocode}
 %<*xetex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-xetex.def}%
-  [2026-05-21 v1.32 bookmark driver for xetex (HO)]%
+  [2026-10-17 v1.33 bookmark driver for xetex (HO)]%
 %</xetex>  
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -2110,7 +2110,7 @@
 %<*vtex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-vtex.def}%
-  [2026-05-21 v1.32 bookmark driver for VTeX (HO)]%
+  [2026-10-17 v1.33 bookmark driver for VTeX (HO)]%
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -2441,14 +2441,14 @@
 %<*pdftex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-pdftex.def}%
-  [2026-05-21 v1.32 bookmark driver for pdfTeX (HO)]%
+  [2026-10-17 v1.33 bookmark driver for pdfTeX (HO)]%
 %</pdftex>  
 %    \end{macrocode}
 %    \begin{macrocode}
 %<*luatex>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-luatex.def}%
-  [2026-05-21 v1.32 bookmark driver for luaTeX (HO)]%
+  [2026-10-17 v1.33 bookmark driver for luaTeX (HO)]%
 %</luatex>  
 %    \end{macrocode}
 %
@@ -2629,7 +2629,7 @@
 %<*dvips>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{bkm-dvips.def}%
-  [2026-05-21 v1.32 bookmark driver for dvips (HO)]%
+  [2026-10-17 v1.33 bookmark driver for dvips (HO)]%
 %    \end{macrocode}
 %    \begin{macro}[int]{\BKM@PSHeaderFile}
 %    \begin{macrocode}
@@ -3417,6 +3417,10 @@
 %   \item The package uses now the LaTeX key-value system for the options to avoid
 %   option clash errors.
 %   \item The documentation is now tagged.
+%   \end{Version}
+%   \begin{Version}{2026-10-17 v1.33}
+%   \item Add braces around level value in \cs{pdfbookmark}, see 
+%    https://tex.stackexchange.com/q/767305/2388
 %   \end{Version}
 % \end{History}
 %

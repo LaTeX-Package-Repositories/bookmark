@@ -1,6 +1,6 @@
 # bookmark package for LaTeX
 
-Version: 2026-05-21 v1.32
+Version: 2026-10-17 v1.33
 
 
 This package implements a new bookmark (outline) organization for
